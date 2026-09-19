@@ -1,5 +1,27 @@
 const YT=q=>`https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
 const RB='https://www.rollerblade.com/usa/en/rollerblade-tv/Advice';
+const RB_VIDEO={
+ 'Basic stride':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/basic-stride-2',
+ 'T-stop':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/t-stop-2',
+ 'Heel stop':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/heel-stop-2',
+ 'A Frame Turn':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/a-frame-turn-2',
+ 'Parallel Turn':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/parallel-turn-2',
+ 'Cross Over Turn Forward and Backward':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/cross-over-turn-forward-and-backward',
+ 'Skating Backward':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/skating-backward',
+ 'Hockey Stop':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/hockey-stop',
+ 'Controlling Speed':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/controlling-speed',
+ 'Skating Over Bumps and Tar Snakes':'https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/skating-over-bumps-and-tar-snakes'
+};
+const RB_NAME={
+ 'Basic stride':'Basic Stride','T-stop':'T-Stop','Heel stop':'Heel Stop','A-frame turn':'A Frame Turn','Parallel turn':'Parallel Turn','Crossover':'Cross Over Turn Forward and Backward','Crossover forward':'Cross Over Turn Forward and Backward','Backward basics':'Skating Backward','Hockey stop — progresión':'Hockey Stop','Speed control':'Controlling Speed','Skating Over Bumps and Tar Snakes':'Skating Over Bumps and Tar Snakes'
+};
+function rbFor(exercise){
+ const n=exercise.name||'';
+ for(const [k,url] of Object.entries(RB_VIDEO)) if(n.toLowerCase().includes(k.toLowerCase())) return {name:k,url};
+ for(const [k,name] of Object.entries(RB_NAME)) if(n.toLowerCase().includes(k.toLowerCase())) return {name,url:RB_VIDEO[name]||RB};
+ return null;
+}
+
 const RB_LEARN='https://www.rollerblade.com/usa/en/time-to-learn';
 const RB_BACK='https://www.rollerblade.com/usa/en/the-rollerblade-experience/urban/danny-s-point-how-to-skate-backwards';
 const state=JSON.parse(localStorage.getItem('rts13_v2')||'null')||{week:0,done:{},logs:[],skills:{}};
@@ -111,16 +133,21 @@ add('Evaluación + consolidación','Testing','Demostrar control. Comparar con se
  day('Vie','Frenado',[ex('Speed control','15 min','Compara confianza con semana 1.','inline skating speed control'),common.hockey]),
  day('Sáb','Final 13 semanas',[ex('Sesión final técnica','70 min','10 fácil + 40 técnica/rodaje + 10 progresivo + 10 fácil. No buscar récord.','inline skating basic workout')])]);
 const resources=[
- ['Serie oficial: Time to Learn','Rollerblade — fundamentos: ajuste, protección, levantarse, stride, A-frame, heel stop.','https://www.rollerblade.com/usa/en/time-to-learn',RB_LEARN],
- ['Biblioteca Rollerblade','Más de 100 vídeos: T-stop, parallel turn, crossover, backwards, hockey stop, speed control, carving y más.','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice',RB],
- ['Backwards','Tutorial oficial de Danny sobre postura, mirada y progresión para patinar hacia atrás.','https://www.rollerblade.com/usa/en/the-rollerblade-experience/urban/danny-s-point-how-to-skate-backwards',RB_BACK],
- ['Basic stride','Vídeos de referencia para la zancada básica y eficiencia.','inline skating basic stride',''],
- ['T-stop','Progresión de frenado en T.','inline skating T stop tutorial',''],
- ['Parallel turn','Técnica de giro paralelo.','inline skating parallel turn',''],
- ['Crossover','Progresión de crossover forward y en curva.','inline skating crossover turn',''],
- ['Hockey stop','Referencia para introducir el hockey stop cuando T-stop ya sea sólido.','inline skating hockey stop tutorial',''],
- ['Slalom','Control de cantos, rodillas y trayectoria.','inline skating slalom technique',''],
- ['Skating over bumps','Cómo absorber pequeñas irregularidades sin perder control.','inline skating skating over bumps','']
+ ['New to Inline Skating: Basic stride','Rollerblade · Basic Stride','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/basic-stride-2',RB],
+ ['T-Stop','Rollerblade · T-Stop','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/t-stop-2',RB],
+ ['Heel Stop','Rollerblade · Heel Stop','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/heel-stop-2',RB],
+ ['A Frame Turn','Rollerblade · A Frame Turn','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/a-frame-turn-2',RB],
+ ['Parallel Turn','Rollerblade · Parallel Turn','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/parallel-turn-2',RB],
+ ['Cross Over Turn Forward and Backward','Rollerblade · Cross Over Turn Forward and Backward','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/cross-over-turn-forward-and-backward',RB],
+ ['Skating Backward','Rollerblade · Skating Backward','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/skating-backward',RB],
+ ['Hockey Stop','Rollerblade · Hockey Stop','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/hockey-stop',RB],
+ ['Controlling Speed','Rollerblade · Controlling Speed','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/controlling-speed',RB],
+ ['Skating Over Bumps and Tar Snakes','Rollerblade · Skating Over Bumps and Tar Snakes','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/skating-over-bumps-and-tar-snakes',RB],
+ ['New to Inline Skating: A frame turn','Rollerblade · A Frame Turn','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/a-frame-turn-2',RB_LEARN],
+ ['New to Inline Skating: Heel stop','Rollerblade · Heel Stop','https://www.rollerblade.com/usa/en/rollerblade-tv/Advice/heel-stop-2',RB_LEARN],
+ ['New to Inline Skating: How to put on protective gear','Rollerblade · Protective Gear','https://www.rollerblade.com/usa/en/time-to-learn',RB_LEARN],
+ ['Danny’s Point: How to skate backwards','Rollerblade · Backwards progression','https://www.rollerblade.com/usa/en/the-rollerblade-experience/urban/danny-s-point-how-to-skate-backwards',RB_BACK],
+ ['YouTube technique search','Búsqueda complementaria por técnica','inline skating beginner technique tutorial','']
 ];
 const skills=[
  ['Postura y equilibrio','Calidad 1–5','Mantener postura durante 60 s sin tensión excesiva.'],['One-foot glide','segundos por lado','Tiempo estable sobre un pie, sin cruzar brazos ni perder línea.'],['T-stop','metros para detener','Desde velocidad moderada, frenar de forma progresiva y repetible.'],['Parallel turn','calidad 1–5','Radio y trayectoria similares en ambos sentidos.'],['Crossover','segundos continuos/lado','Cruces fluidos sin levantarse ni perder línea.'],['Backwards','metros continuos','Trayectoria estable mirando por encima del hombro.'],['Transition','repeticiones limpias','Forward ↔ backward sin perder equilibrio.'],['Slalom','tiempo / circuito','Mantener trayectoria y postura con conos separados.'],['Hockey stop','calidad 1–5','Solo medir si ya es técnicamente seguro.']
@@ -136,7 +163,7 @@ function renderPlan(){
    let body=d.exs.map((x,ei)=>{
      const k=state.week+'-'+di+'-'+ei, c=!!state.done[k];
      const note=x.notes||'Criterio: termina todas las repeticiones manteniendo postura, control y respiración. Si la técnica se degrada, reduce velocidad o volumen.';
-     return '<div class="exercise '+(c?'completed':'')+'" data-ex="'+k+'"><input type="checkbox" '+(c?'checked':'')+'><div><h4>'+x.name+'</h4><p>'+x.desc+'</p><div class="resourceLinks"><a target="_blank" href="'+YT(x.video)+'">▶ Vídeos</a><a target="_blank" href="'+RB+'">🎥 Rollerblade</a><button class="detail">ℹ️ Ver criterio</button></div><div class="exerciseNotes">'+note+'</div></div><div class="dose">'+x.dose+'</div></div>';
+     return '<div class="exercise '+(c?'completed':'')+'" data-ex="'+k+'"><input type="checkbox" '+(c?'checked':'')+'><div><h4>'+x.name+'</h4><p>'+x.desc+'</p><div class="resourceLinks"><a target="_blank" rel="noopener" href="'+YT(x.video)+'">▶ YouTube</a>'+(rbFor(x)?'<a target="_blank" rel="noopener" href="'+rbFor(x).url+'">🎥 RB · '+rbFor(x).name+'</a>':'<a target="_blank" rel="noopener" href="'+RB+'">🎥 Rollerblade · Advice</a>')+'<button class="detail">ℹ️ Ver criterio</button></div><div class="exerciseNotes">'+note+'</div></div><div class="dose">'+x.dose+'</div></div>';
    }).join('');
    return '<article class="day"><div class="dayHead" data-day="'+di+'"><div><div class="dayTitle">'+['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][di]+' · '+d.name+'</div><div class="dayMeta">'+d.goal+'</div></div><div class="dayProgress">'+dd+'/'+d.exs.length+'</div></div><div class="dayBody">'+body+'</div></article>';
  }).join('');
@@ -154,4 +181,8 @@ function toast(t){let x=document.getElementById('toast');x.textContent=t;x.class
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.tabPanel').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.tab+'Tab').classList.remove('hidden')});
 logForm.onsubmit=e=>{e.preventDefault();state.logs.push({date:logDate.value,week:+logWeek.value,min:+logMin.value,km:+logKm.value,rpe:+logRpe.value,hr:+logHr.value,notes:logNotes.value});save();logForm.reset();logDate.value=new Date().toISOString().slice(0,10);renderLogs();toast('Sesión registrada ✓')};
 exportBtn.onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='return-to-skating-progreso.json';a.click();URL.revokeObjectURL(a.href);toast('Progreso exportado')};importBtn.onclick=()=>importFile.click();importFile.onchange=()=>{let f=importFile.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.done||!x.logs)throw 0;Object.assign(state,x);save();render();toast('Progreso importado ✓')}catch{toast('Archivo no válido')}};r.readAsText(f)};
+const savedTheme=localStorage.getItem('rts13_theme')||'light';
+if(savedTheme==='dark')document.documentElement.classList.add('dark');
+const themeBtn=document.getElementById('themeBtn');
+if(themeBtn){themeBtn.textContent=savedTheme==='dark'?'☀':'☾';themeBtn.onclick=()=>{const dark=!document.documentElement.classList.contains('dark');document.documentElement.classList.toggle('dark',dark);localStorage.setItem('rts13_theme',dark?'dark':'light');themeBtn.textContent=dark?'☀':'☾';};}
 render();
