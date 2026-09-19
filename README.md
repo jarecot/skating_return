@@ -32,3 +32,27 @@ El progreso se almacena localmente en el navegador mediante `localStorage`. Util
 - Favicon SVG de patín.
 - Enlaces Rollerblade muestran el título oficial del vídeo.
 - Encabezado genérico sin referencia a 3×110.
+
+
+## v5 — revisión técnica y científica
+
+Esta versión revisa la progresión con un criterio conservador de coaching: primero postura/equilibrio y desplazamiento; después frenado y giros; luego backwards, transiciones, crossover y finalmente habilidades dinámicas como hockey stop, velocidad y superficies más complejas. El objetivo no es imponer una cifra universal de minutos —la literatura no establece una receta única para inline skating recreativo— sino evitar saltos de habilidad, intensidad o entorno que no estén respaldados por control técnico.
+
+### Perfiles de experiencia
+- **Ninguna:** menor volumen y desbloqueo más tardío de habilidades dinámicas.
+- **Ya patiné antes:** retorno progresivo con reducción moderada de carga.
+- **Principiante:** base conservadora.
+- **Intermedio:** progresión estándar si ya domina frenado y control.
+- **Avanzado:** pequeño incremento de volumen, manteniendo las mismas puertas de seguridad.
+
+### Coach adaptativo
+La app usa RPE, fatiga, molestias, control y técnica para ajustar visualmente la próxima sesión. Las recomendaciones son deliberadamente conservadoras: una señal importante de dolor o pérdida de control bloquea la progresión técnica y prioriza recuperación.
+
+### Fuentes de referencia
+- Sports Medicine Australia — Inline Skating Fact Sheet.
+- American Academy/orthopaedic guidance on roller/inline skating injury prevention.
+- American Orthopaedic Society for Sports Medicine — Inline Skating Injuries.
+- Rollerblade — Time to Learn / Rollerblade TV.
+- ACSM — exercise prescription and gradual progression principles.
+
+Estas fuentes apoyan especialmente el aprendizaje inicial de postura, frenado, giro y stride, el uso de protección, la elección de superficies seguras y la progresión gradual. No se presenta ninguna cifra concreta de minutos como una norma oficial de la disciplina.

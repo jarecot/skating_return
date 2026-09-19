@@ -24,7 +24,8 @@ function rbFor(exercise){
 
 const RB_LEARN='https://www.rollerblade.com/usa/en/time-to-learn';
 const RB_BACK='https://www.rollerblade.com/usa/en/the-rollerblade-experience/urban/danny-s-point-how-to-skate-backwards';
-const state=JSON.parse(localStorage.getItem('rts13_v2')||'null')||{week:0,done:{},logs:[],skills:{}};
+const state=JSON.parse(localStorage.getItem('rts13_v2')||'null')||{week:0,done:{},logs:[],skills:{},profile:'returning'};
+state.profile=state.profile||'returning';
 const save=()=>localStorage.setItem('rts13_v2',JSON.stringify(state));
 const ex=(name,dose,desc,video,notes='')=>({name,dose,desc,video,notes});
 const day=(name,goal,exs)=>({name,goal,exs});
@@ -48,91 +49,91 @@ const common={
  speed:ex('Aceleración submáxima','6 × 8–10 s','Acelera hasta RPE 6; nunca sprint. Recupera 60–90 s.','inline skating acceleration technique'),
  hockey:ex('Hockey stop — progresión','6–8 rep','Solo si T-stop es sólido. Practica primero el gesto a velocidad muy baja.','inline skating hockey stop tutorial'),
 }
-add('Volver a sentir el patín','Readaptación','Equilibrio, postura, marcha y primer contacto con el frenado.', '120–150 min',['Superficie plana','RPE 3–4','Sin pendientes'],[
+add('Volver a sentir el patín','Readaptación','Equilibrio, postura, marcha y primer contacto con el frenado.', '90–120 min',['Superficie plana','RPE 3–4','Sin pendientes'],[
  day('Lun','Confianza', [common.stance,ex('Marcha en V','3 × 2 min','Pasos pequeños hasta conseguir deslizamiento.','inline skating beginner basic stride'),common.glide,ex('Frenado: gesto sin rodar','10 rep','Practica la posición sobre césped/alfombra antes de rodar.','inline skating heel brake braking technique')]),
  day('Mar','Desplazamiento',[common.warm,common.stride,common.aframe,common.tstop]),
  day('Mié','Recuperación técnica',[ex('Rodaje muy fácil','15–20 min','RPE 2–3. Busca relajación y simetría.','inline skating easy skating technique'),common.stance,common.glide]),
  day('Jue','Frenado',[common.warm,common.brake,common.tstop,ex('Frenado de emergencia: preparación','6 rep','Desde velocidad mínima, adopta postura estable antes de aumentar presión.','inline skating braking posture')]),
  day('Vie','Giros',[common.stride,common.aframe,common.carving,common.tstop]),
  day('Sáb','Integración',[common.warm,ex('Circuito básico','3 × 6 min','Stride → A-frame → frenado → rodaje fácil. Descansa 2 min entre vueltas.','inline skating basic workout'),ex('Rodaje continuo','10–15 min','RPE 3–4, sin perseguir kilómetros.','inline skating beginner endurance')])]);
-add('Frenado + estabilidad','Base técnica','Hacer que detenerse sea una habilidad automática antes de subir velocidad.','150–180 min',['T-stop ambos lados','Heel brake si disponible','RPE 3–4'],[
+add('Frenado + estabilidad','Base técnica','Hacer que detenerse sea una habilidad automática antes de subir velocidad.','105–135 min',['T-stop ambos lados','Heel brake si disponible','RPE 3–4'],[
  day('Lun','Frenado',[common.warm,common.tstop,common.brake,ex('Stop-go','8 ×','Rodar 15–20 m y frenar completamente; recupera caminando/rodando.','inline skating stop and go workout')]),
  day('Mar','Equilibrio',[common.glide,ex('One-foot stance','6 × 15 s/lado','Mantén el otro pie cerca del suelo como apoyo de seguridad.','inline skating one foot balance beginner'),common.slalom]),
  day('Mié','Aeróbico fácil',[common.warm,ex('Rodaje continuo','25–30 min','RPE 3–4; puedes hablar en frases completas.','inline skating fitness beginner')]),
  day('Jue','Transferencia',[common.swizzle,common.stride,common.tstop,common.brake]),
  day('Vie','Curvas',[common.parallel,common.aframe,common.carving,common.tstop]),
  day('Sáb','Circuito',[common.warm,ex('Circuito control','4 × 6 min','Slalom → carving → one-foot glide → T-stop. 2 min suaves entre vueltas.','inline skating basic workout')])]);
-add('Zancada eficiente','Locomoción','Generar más desplazamiento con menos pasos y menos tensión.','175–205 min',['RPE 4–5','Glide estable','Empuje lateral'],[
+add('Zancada eficiente','Locomoción','Generar más desplazamiento con menos pasos y menos tensión.','120–150 min',['RPE 4–5','Glide estable','Empuje lateral'],[
  day('Lun','Stride',[common.warm,ex('Push & recover','5 × 3 min','Empuje lateral, recupera debajo del cuerpo y permite una fase de glide.','inline skating push recover technique'),common.glide]),
  day('Mar','Técnica',[common.swizzle,common.carving,ex('Crossover preparación','8 × 30 s','Transferencia de peso en curva amplia antes de buscar velocidad.','inline skating crossover beginner preparation')]),
  day('Mié','Endurance',[common.warm,ex('Rodaje Z2 subjetivo','30–35 min','RPE 4–5. Habla en frases; reduce si 645 dejó fatiga importante.','inline skating fitness endurance')]),
  day('Jue','Crossover',[ex('Crossover lento','8 × 30 s/lado','Curva grande, pocos cruces y mucha estabilidad.','inline skating crossover beginner'),common.parallel,common.tstop]),
  day('Vie','Agilidad',[common.slalom,common.aframe,common.glide]),
  day('Sáb','Rodaje técnico',[ex('Bloques técnicos','40 min','5 min stride → 5 min carving → 5 min crossover → 5 min fácil, repetir.','inline skating basic workout')])]);
-add('Crossover + curvas','Curvas','Convertir los giros en una herramienta dinámica y simétrica.','190–225 min',['Crossover ambos sentidos','Radio de curva consistente','RPE 4–5'],[
+add('Crossover + curvas','Curvas','Convertir los giros en una herramienta dinámica y simétrica.','130–165 min',['Crossover ambos sentidos','Radio de curva consistente','RPE 4–5'],[
  day('Lun','Crossover',[common.warm,ex('Crossovers en círculo','6 × 60 s/lado','Círculo grande; busca ritmo constante.','inline skating crossover turn'),common.carving]),
  day('Mar','Parallel turn',[common.parallel,ex('Radio progresivo','6 ×','Empieza amplio y reduce ligeramente el radio sin aumentar demasiado la velocidad.','inline skating tight parallel turn'),common.tstop]),
  day('Mié','Endurance',[common.warm,ex('Rodaje continuo','35–40 min','RPE 4–5; técnica constante.','inline skating fitness endurance')]),
  day('Jue','Agilidad',[common.slalom,common.crossover,ex('Transitions preparación','8 ×','Solo a paso lento. Aprende la orientación antes de añadir velocidad.','inline skating transitions beginner')]),
  day('Vie','Técnica',[common.glide,common.parallel,common.crossover,common.tstop]),
  day('Sáb','Sesión larga fácil',[ex('Rodaje técnico','45–50 min','Cada 10 min incluye 2 min de técnica.','inline skating endurance technique')])]);
-add('Backwards + transiciones','Orientación','Introducir backwards y transiciones con margen de seguridad.','200–235 min',['Backwards estable','Transiciones lentas','RPE 4–5'],[
+add('Backwards + transiciones','Orientación','Introducir backwards y transiciones con margen de seguridad.','135–175 min',['Backwards estable','Transiciones lentas','RPE 4–5'],[
  day('Lun','Backwards',[common.warm,common.backward,ex('Backward swizzle','4 × 90 s','Abre/cierra suavemente; no busques velocidad.','inline skating backward swizzle')]),
  day('Mar','Transitions',[ex('Forward → backward','8 rep','Primero caminando/rodando muy lento; mira por encima del hombro.','inline skating forward backward transition'),ex('Backward → forward','8 rep','Espacio amplio y superficie plana.','inline skating transition backward forward')]),
  day('Mié','Endurance',[common.warm,ex('Rodaje fácil','40 min','Mayormente forward.','inline skating fitness endurance')]),
  day('Jue','Backwards curvas',[common.backward,ex('Backward A-frame','6 × cada lado','Curvas amplias a velocidad mínima.','inline skating backward A frame turn'),ex('Backward slalom ancho','4 × 60 s','Solo si puedes mirar y mantener trayectoria.','inline skating backward slalom')]),
  day('Vie','Combinación',[common.crossover,common.transition,common.tstop]),
  day('Sáb','Circuito',[ex('Forward → crossover → transition → backward','5 vueltas','Cada vuelta termina con frenado seguro.','inline skating transition crossover backwards')])]);
-add('Control de velocidad','Frenado avanzado','Acelerar solo dentro de una zona en la que puedes volver a una velocidad segura.','210–250 min',['RPE moderado 5–6','Frenado automático','Sin pendientes'],[
+add('Control de velocidad','Frenado avanzado','Acelerar solo dentro de una zona en la que puedes volver a una velocidad segura.','145–185 min',['RPE moderado 5–6','Frenado automático','Sin pendientes'],[
  day('Lun','Aceleración',[common.warm,common.speed,common.tstop]),
  day('Mar','Curvas',[common.parallel,common.carving,common.crossover]),
  day('Mié','Endurance',[common.warm,ex('Rodaje continuo','45 min','RPE 4–5.','inline skating fitness endurance')]),
  day('Jue','Hockey stop preparación',[ex('Gesto hockey stop','8 rep','Practica el pivote de pies sin velocidad.','inline skating hockey stop beginner'),ex('Hockey stop asistido','6 rep','Solo si T-stop es fiable y tienes mucho espacio.','inline skating hockey stop tutorial'),common.tstop]),
  day('Vie','Agilidad',[common.slalom,common.crossover,common.transition]),
  day('Sáb','Progresivo',[ex('Rodaje progresivo','45–50 min','10 min fácil → 15 moderado → 5 técnica → 10 fácil.','inline skating endurance progression')])]);
-add('Potencia técnica','Empuje','Aumentar calidad del empuje sin convertir la sesión en sprint.','215–255 min',['RPE 5–6','Power stride','Crossover fluido'],[
+add('Potencia técnica','Empuje','Aumentar calidad del empuje sin convertir la sesión en sprint.','150–195 min',['RPE 5–6','Power stride','Crossover fluido'],[
  day('Lun','Power stride',[ex('Power stride','5 × 3 min','Empuje más largo; recuperación completa del pie.','inline skating power stride'),common.glide]),
  day('Mar','Crossover potente',[ex('Crossover con presión','8 × 45 s/lado','Más presión sobre el exterior; mantén el torso estable.','inline skating crossover technique'),common.parallel]),
  day('Mié','Endurance',[ex('Rodaje','45 min','RPE 4–5.','inline skating fitness endurance')]),
  day('Jue','Agilidad',[ex('Slalom controlado','6 × 2 min','Aumenta ritmo solo si mantienes trayectoria.','inline skating slalom technique'),common.transition]),
  day('Vie','Frenado',[common.tstop,common.hockey,common.brake]),
  day('Sáb','Intervalos',[ex('6 × 3 min moderado / 2 min fácil','30 min','Bloques moderados RPE 6; nunca sprint.','inline skating interval training')])]);
-add('Resistencia + economía','Base aeróbica','Aumentar tiempo sobre ruedas sin degradar técnica.','220–270 min',['RPE 4–5','50–60 min continuo','Técnica bajo fatiga'],[
+add('Resistencia + economía','Base aeróbica','Aumentar tiempo sobre ruedas sin degradar técnica.','155–205 min',['RPE 4–5','50–60 min continuo','Técnica bajo fatiga'],[
  day('Lun','Economía',[ex('Stride eficiente','5 × 3 min','Menos pasos innecesarios; deja rodar después de cada empuje.','inline skating efficient stride'),common.carving]),
  day('Mar','Curvas',[common.crossover,common.parallel,common.glide]),
  day('Mié','Endurance',[ex('Rodaje continuo','50 min','RPE 4–5; si la técnica se rompe, reduce ritmo.','inline skating endurance')]),
  day('Jue','Skills',[common.backward,common.transition,common.tstop]),
  day('Vie','Agilidad',[ex('Slalom + crossover','30 min','5 min slalom → 5 min crossover → 2 min fácil, repetir.','inline skating slalom crossover')]),
  day('Sáb','Rodaje largo',[ex('Rodaje fácil','55–60 min','Ritmo conversacional; no buscar récord.','inline skating long distance beginner')])]);
-add('Urban básico','Aplicación','Aprender a leer superficie y entorno sin introducir saltos ni riesgos innecesarios.','220–275 min',['Superficie conocida','Control total','RPE 4–5'],[
+add('Urban básico','Aplicación','Aprender a leer superficie y entorno sin introducir saltos ni riesgos innecesarios.','160–210 min',['Superficie conocida','Control total','RPE 4–5'],[
  day('Lun','Superficie',[ex('Texturas suaves','15 min','Pequeñas variaciones de pavimento a velocidad baja; rodillas flexionadas.','inline skating rough surface technique'),ex('Juntas/bumps pequeños','10 min','Practica absorber con tobillos y rodillas; no saltar.','inline skating skating over bumps')]),
  day('Mar','Urban',[common.aframe,common.carving,ex('Lectura de obstáculos','10 min','Acércate, evalúa, reduce velocidad y decide; no subas bordillos todavía.','inline skating urban safety')]),
  day('Mié','Endurance',[ex('Rodaje','50 min','Ruta plana conocida.','inline skating endurance')]),
  day('Jue','Skills',[common.backward,common.transition,common.hockey]),
  day('Vie','Control',[ex('Stop-go','20–25 min','Acelera 5 s, estabiliza y frena; 8–10 ciclos.','inline skating stop and go workout')]),
  day('Sáb','Ruta técnica',[ex('Ruta segura','55–60 min','Superficie conocida, sin tráfico y sin pendientes nuevas.','inline skating urban skating safety')])]);
-add('Velocidad submáxima','Velocidad','Explorar velocidad sin perder técnica ni margen de frenado.','225–280 min',['RPE 6 máximo','Aceleraciones cortas','Frenado controlado'],[
+add('Velocidad submáxima','Velocidad','Explorar velocidad sin perder técnica ni margen de frenado.','165–215 min',['RPE 6 máximo','Aceleraciones cortas','Frenado controlado'],[
  day('Lun','Acceleration',[common.warm,ex('6 × 8–10 s','20 min','Aceleración progresiva; 90 s fácil.','inline skating acceleration technique'),common.tstop]),
  day('Mar','Technique',[ex('Power stride','15 min','Longitud y recuperación.','inline skating power stride'),common.crossover]),
  day('Mié','Endurance',[ex('Rodaje','50–60 min','RPE 4–5.','inline skating endurance')]),
  day('Jue','Braking',[ex('Speed control','15 min','Aumenta solo hasta una velocidad que puedas frenar con margen.','inline skating speed control'),common.hockey]),
  day('Vie','Agility',[common.slalom,common.transition]),
  day('Sáb','Intervals',[ex('8 × 2 min moderado / 2 min fácil','32 min','RPE 6 en bloques moderados.','inline skating interval training')])]);
-add('Integración','Performance recreativa','Combinar habilidades en sesiones completas parecidas a un entrenamiento real.','240–300 min',['Técnica bajo fatiga','RPE 4–6','Sesión larga'],[
+add('Integración','Performance recreativa','Combinar habilidades en sesiones completas parecidas a un entrenamiento real.','175–225 min',['Técnica bajo fatiga','RPE 4–6','Sesión larga'],[
  day('Lun','Skills circuit',[ex('Circuito 1','25 min','Stride → carving → crossover → stop.','inline skating basic workout'),ex('Circuito 2','15 min','Backward → transition → forward → T-stop.','inline skating transitions backwards')]),
  day('Mar','Endurance',[ex('Rodaje','60 min','RPE 4–5.','inline skating endurance')]),
  day('Mié','Recuperación',[ex('Rodaje muy fácil','25–30 min','RPE 2–3; movilidad sobre ruedas.','inline skating easy skating')]),
  day('Jue','Speed + braking',[ex('10 × 10 s','25 min','Aceleración submáxima, recuperación amplia.','inline skating acceleration'),common.tstop,common.hockey]),
  day('Vie','Agility',[ex('Slalom + crossovers','30 min','Bloques de 5 min.','inline skating slalom crossover')]),
  day('Sáb','Sesión larga',[ex('Rodaje','60–65 min','Técnica bajo fatiga; sin perseguir récord.','inline skating endurance')])]);
-add('Consolidación','Dominio','Repetir las habilidades clave con menos volumen y máxima calidad antes de evaluar.','220–270 min',['Calidad > cantidad','RPE 3–5','Sin habilidades nuevas'],[
+add('Consolidación técnica','Consolidación','Reducir variabilidad y convertir las habilidades principales en patrones fiables antes del test final.','165–215 min',['Calidad > velocidad','Simetría ambos lados','RPE 4–5'],[
  day('Lun','Fundamentos',[common.warm,common.stride,common.glide,common.tstop]),
  day('Mar','Curvas',[common.aframe,common.parallel,common.crossover]),
- day('Mié','Endurance fácil',[ex('Rodaje continuo','45–50 min','RPE 3–4. Termina con sensación de reserva.','inline skating easy endurance')]),
- day('Jue','Orientación',[common.backward,common.transition,common.slalom]),
- day('Vie','Control',[ex('Speed control','15 min','Velocidad moderada y frenado con margen amplio.','inline skating speed control'),common.tstop,common.hockey]),
- day('Sáb','Ensayo general',[ex('Circuito integrado','50–60 min','Stride → curvas → crossover → transition → braking. Pausa cuando la técnica pierda calidad.','inline skating skills circuit')])]);
-add('Evaluación final','Testing','Demostrar control y comparar con la semana 1 sin perseguir marcas peligrosas.','210–260 min',['Test técnico','Comparar semanas 1/4/8/13','Registrar RPE, control y molestias'],[
+ day('Mié','Endurance',[ex('Rodaje técnico','50–60 min','RPE 4–5; revisa postura cada 10 min.','inline skating endurance technique')]),
+ day('Jue','Orientación',[common.backward,common.transition]),
+ day('Vie','Agilidad',[common.slalom,ex('Skating Over Bumps and Tar Snakes','12 min','Practica únicamente sobre irregularidades pequeñas, conocidas y seguras.','inline skating bumps tar snakes')]),
+ day('Sáb','Simulación',[ex('Sesión integrada','55–65 min','Combina stride, giros, backwards, transiciones y frenado sin buscar velocidad máxima.','inline skating basic workout')])]);
+add('Evaluación final','Testing','Demostrar control y comparar con la semana 1 sin perseguir marcas peligrosas.','150–200 min',['Test técnico','Comparar semanas 1/4/8/13','Registrar RPE, control y molestias'],[
  day('Lun','Test técnico',[common.glide,common.tstop,common.parallel]),
  day('Mar','Test agilidad',[common.slalom,common.crossover]),
  day('Mié','Endurance',[ex('Rodaje','50–60 min','RPE 4–5; técnica constante.','inline skating endurance')]),
@@ -159,23 +160,61 @@ const resources=[
 const skills=[
  ['Postura y equilibrio','Calidad 1–5','Mantener postura durante 60 s sin tensión excesiva.'],['One-foot glide','segundos por lado','Tiempo estable sobre un pie, sin cruzar brazos ni perder línea.'],['T-stop','metros para detener','Desde velocidad moderada, frenar de forma progresiva y repetible.'],['Parallel turn','calidad 1–5','Radio y trayectoria similares en ambos sentidos.'],['Crossover','segundos continuos/lado','Cruces fluidos sin levantarse ni perder línea.'],['Backwards','metros continuos','Trayectoria estable mirando por encima del hombro.'],['Transition','repeticiones limpias','Forward ↔ backward sin perder equilibrio.'],['Slalom','tiempo / circuito','Mantener trayectoria y postura con conos separados.'],['Hockey stop','calidad 1–5','Solo medir si ya es técnicamente seguro.']
 ];
-function progressWeek(wi){let all=0,done=0;W[wi].days.forEach((d,di)=>d.exs.forEach((_,ei)=>{all++;if(state.done[`${wi}-${di}-${ei}`])done++}));return {all,done,p:all?done/all*100:0}}
+const PROFILES={
+ none:{label:'Ninguna',desc:'Nunca he patinado',factor:.72,unlocks:{tstop:1,crossover:5,backward:7,transition:7,hockey:13}},
+ past:{label:'Ya patiné antes',desc:'Tengo experiencia previa, pero estoy retomando',factor:.88,unlocks:{tstop:1,crossover:4,backward:5,transition:5,hockey:9}},
+ beginner:{label:'Principiante',desc:'Sé lo básico y todavía estoy construyendo confianza',factor:.82,unlocks:{tstop:1,crossover:4,backward:6,transition:6,hockey:10}},
+ intermediate:{label:'Intermedio',desc:'Patino con control y freno con seguridad',factor:1,unlocks:{tstop:1,crossover:3,backward:4,transition:4,hockey:8}},
+ advanced:{label:'Avanzado',desc:'Tengo técnica sólida y experiencia consistente',factor:1.08,unlocks:{tstop:1,crossover:2,backward:3,transition:3,hockey:7}}
+};
+function profile(){return PROFILES[state.profile]||PROFILES.past}
+function exerciseKey(name){
+ const n=name.toLowerCase();
+ if(n.includes('hockey'))return'hockey'; if(n.includes('backward'))return'backward'; if(n.includes('transition'))return'transition';
+ if(n.includes('crossover'))return'crossover'; if(n.includes('t-stop'))return'tstop'; return null;
+}
+function visibleExercise(x,wi){const k=exerciseKey(x.name);return !k || wi+1>=profile().unlocks[k]}
+function scaledDose(dose){
+ const f=profile().factor;
+ let d=dose.replace(/(\d+)\s*[–-]\s*(\d+)\s*min/g,(m,a,b)=>`${Math.max(1,Math.round(+a*f))}–${Math.max(1,Math.round(+b*f))} min`);
+ d=d.replace(/(\d+(?:[.,]\d+)?)\s*min/g,(m,n)=>`${Math.max(1,Math.round(parseFloat(n.replace(',','.'))*f))} min`);
+ d=d.replace(/(\d+)\s*×\s*(\d+)\s*(?:rep|reps)/gi,(m,a,b)=>`${Math.max(1,Math.round(+a*Math.max(.85,f)))} × ${Math.max(1,Math.round(+b*Math.max(.85,f)))} rep`);
+ d=d.replace(/(\d+)\s*×\s*(\d+)\s*s/g,(m,a,b)=>`${Math.max(1,Math.round(+a*Math.max(.8,f)))} × ${Math.max(5,Math.round(+b*f))} s`);
+ return d;
+}
+function scaledVolume(vol){
+ return vol.replace(/(\d+)–(\d+)\s*min/g,(m,a,b)=>`${Math.max(60,Math.round(+a*profile().factor))}–${Math.max(75,Math.round(+b*profile().factor))} min`);
+}
+function coachAdjustment(){
+ const l=state.logs[state.logs.length-1];
+ if(!l || Number(l.week)!==state.week+1)return {level:'neutral',factor:1,title:'Sin ajuste todavía',text:'Registra una sesión para que el Coach adapte la siguiente.'};
+ const r=+l.rpe||0,f=+l.fatigue||0,p=+l.pain||0,c=+l.control||0,t=+l.technique||0;
+ if(p>=4||r>=9||f>=5||c===1||t===1)return {level:'red',factor:.55,title:'Recuperación / técnica fácil',text:'Próxima sesión: reduce ~45%. Sin velocidad, hockey stop ni habilidades nuevas. Si el dolor es agudo, articular o persiste, detén el entrenamiento y busca valoración profesional.'};
+ if(p>=2||r>=7||f>=4||c===2||t===2)return {level:'yellow',factor:.75,title:'Repetir y reducir carga',text:'Próxima sesión: reduce ~25%. Mantén habilidades ya aprendidas; no avances de nivel hasta recuperar control y técnica.'};
+ if(r>=8)return {level:'yellow',factor:.8,title:'Carga alta',text:'Próxima sesión: reduce ~20% y conserva el foco técnico.'};
+ if(r&&r<=6&&f&&f<=3&&p<=1&&c>=4&&t>=4)return {level:'green',factor:1.05,title:'Progresión pequeña',text:'Próxima sesión: mantén el plan y aumenta solo una variable, como máximo ~5–10%.'};
+ return {level:'neutral',factor:1,title:'Mantener el plan',text:'Usa la progresión prevista y prioriza calidad sobre velocidad.'};
+}
+function recommendedSession(){
+ const adj=coachAdjustment();
+ const w=W[state.week];
+ const day=w.days.find((d,i)=>{const last=state.logs[state.logs.length-1];return !last||i!==Number(last.day??-1)})||w.days[0];
+ return {adj,day};
+}
+function progressWeek(wi){let all=0,done=0;W[wi].days.forEach((d,di)=>d.exs.forEach((x,ei)=>{if(!visibleExercise(x,wi))return;all++;if(state.done[`${wi}-${di}-${ei}`])done++}));return {all,done,p:all?done/all*100:0}}
 function renderRail(){weekRail.innerHTML=W.map((w,i)=>{let p=progressWeek(i);return `<button class="weekBtn ${i===state.week?'active':''}" data-w="${i}"><span class="num">SEMANA ${i+1}</span><span class="title">${w.title}</span><span class="mini">${w.phase}</span><div class="bar"><i style="width:${p.p}%"></i></div></button>`}).join('');document.querySelectorAll('.weekBtn').forEach(b=>b.onclick=()=>{state.week=+b.dataset.w;save();render()})}
 function renderPlan(){
- const w=W[state.week];
- const p=progressWeek(state.week);
- let html='<div class="weekHero"><div><span class="phaseBadge">'+w.phase+'</span><h2>Semana '+(state.week+1)+' · '+w.title+'</h2><p>'+w.focus+'</p><div class="weekTargets">'+w.targets.map(x=>'<span>'+x+'</span>').join('')+'</div></div><div><strong style="font-size:26px">'+p.done+'/'+p.all+'</strong><div>ejercicios</div><div style="margin-top:5px">'+w.volume+'</div></div></div>';
+ const w=W[state.week],p=progressWeek(state.week),rec=recommendedSession(),f=rec.adj.factor;
+ let html=`<div class="profileBar"><div><span class="eyebrow">NIVEL DE ENTRADA</span><strong>${profile().label}</strong><small>${profile().desc}</small></div><select id="profileSelect">${Object.entries(PROFILES).map(([k,v])=>`<option value="${k}" ${k===state.profile?'selected':''}>${v.label}</option>`).join('')}</select></div>`;
+ html+=`<div class="coach next ${rec.adj.level}"><div class="coachDot"></div><div><span class="eyebrow">PRÓXIMA SESIÓN RECOMENDADA</span><h3>${rec.adj.title}</h3><p>${rec.adj.text}</p><div class="nextSession"><b>${rec.day.name}</b> · ${rec.day.goal} · ajuste ${Math.round((f-1)*100)}%</div></div></div>`;
+ html+=`<div class="weekHero"><div><span class="phaseBadge">${w.phase}</span><h2>Semana ${state.week+1} · ${w.title}</h2><p>${w.focus}</p><div class="weekTargets">${w.targets.map(x=>'<span>'+x+'</span>').join('')}</div></div><div><strong style="font-size:26px">${p.done}/${p.all}</strong><div>ejercicios</div><div style="margin-top:5px">${scaledVolume(w.volume)}</div></div></div>`;
  html+=w.days.map((d,di)=>{
-   const dd=d.exs.filter((_,ei)=>state.done[state.week+'-'+di+'-'+ei]).length;
-   let body=d.exs.map((x,ei)=>{
-     const k=state.week+'-'+di+'-'+ei, c=!!state.done[k];
-     const note=x.notes||'Criterio: termina todas las repeticiones manteniendo postura, control y respiración. Si la técnica se degrada, reduce velocidad o volumen.';
-     const rb=rbFor(x);
-     return '<div class="exercise '+(c?'completed':'')+'" data-ex="'+k+'"><input type="checkbox" '+(c?'checked':'')+'><div><h4>'+x.name+'</h4><p>'+x.desc+'</p><div class="resourceLinks"><a target="_blank" rel="noopener" href="'+YT(x.video)+'">▶ YouTube</a>'+(rb?'<a target="_blank" rel="noopener" href="'+rb.url+'">🎥 Rollerblade · '+rb.name+'</a>':'<a target="_blank" rel="noopener" href="'+RB+'">🎥 Rollerblade · Advice</a>')+'<button class="detail">ℹ️ Ver criterio</button></div><div class="exerciseNotes">'+note+'</div></div><div class="dose">'+x.dose+'</div></div>';
-   }).join('');
-   return '<article class="day"><div class="dayHead" data-day="'+di+'"><div><div class="dayTitle">'+['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][di]+' · '+d.name+'</div><div class="dayMeta">'+d.goal+'</div></div><div class="dayProgress">'+dd+'/'+d.exs.length+'</div></div><div class="dayBody">'+body+'</div></article>';
- }).join('');
+   const visible=d.exs.filter(x=>visibleExercise(x,state.week));
+   const dd=visible.filter(x=>state.done[state.week+'-'+di+'-'+d.exs.indexOf(x)]).length;
+   let body=visible.map(x=>{const ei=d.exs.indexOf(x),k=state.week+'-'+di+'-'+ei,c=!!state.done[k];const note=x.notes||'Criterio: termina las repeticiones manteniendo postura, control y respiración. Si la técnica se degrada, reduce velocidad o volumen.';const rb=rbFor(x);return '<div class="exercise '+(c?'completed':'')+'" data-ex="'+k+'"><input type="checkbox" '+(c?'checked':'')+'><div><h4>'+x.name+'</h4><p>'+x.desc+'</p><div class="resourceLinks"><a target="_blank" rel="noopener" href="'+YT(x.video)+'">▶ YouTube</a>'+(rb?'<a target="_blank" rel="noopener" href="'+rb.url+'">🎥 Rollerblade · '+rb.name+'</a>':'<a target="_blank" rel="noopener" href="'+RB+'">🎥 Rollerblade · Advice</a>')+'<button class="detail">ℹ️ Ver criterio</button></div><div class="exerciseNotes">'+note+'</div></div><div class="dose">'+scaledDose(x.dose)+'</div></div>'}).join('');
+   return '<article class="day"><div class="dayHead" data-day="'+di+'"><div><div class="dayTitle">'+['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][di]+' · '+d.name+'</div><div class="dayMeta">'+d.goal+'</div></div><div class="dayProgress">'+dd+'/'+visible.length+'</div></div><div class="dayBody">'+body+'</div></article>';}).join('');
  weekContent.innerHTML=html;
+ document.getElementById('profileSelect').onchange=e=>{state.profile=e.target.value;save();render()};
  document.querySelectorAll('.exercise input').forEach(inp=>inp.onchange=()=>{let k=inp.closest('.exercise').dataset.ex;state.done[k]=inp.checked;save();render()});
  document.querySelectorAll('.detail').forEach(b=>b.onclick=()=>b.closest('.exercise').classList.toggle('expanded'));
  document.querySelectorAll('.dayHead').forEach(h=>h.onclick=()=>{let body=h.nextElementSibling;body.style.display=body.style.display==='none'?'block':'none'});
@@ -196,12 +235,12 @@ function renderCoach(){
  const l=state.logs[state.logs.length-1],c=coachFor(l);
  el.innerHTML=`<div class="coach ${c.level}"><div class="coachDot"></div><div><span class="eyebrow">ÚLTIMA SESIÓN · SEMANA ${l.week}</span><h3>${c.title}</h3><p>${c.text}</p></div></div>`;
 }
-function renderLogs(){logWeek.innerHTML=W.map((w,i)=>`<option value="${i+1}">Semana ${i+1} · ${w.title}</option>`).join('');logDate.value ||= new Date().toISOString().slice(0,10);renderCoach();logTable.innerHTML=state.logs.length?`<table><thead><tr><th>Fecha</th><th>Sem</th><th>Min</th><th>Km</th><th>RPE</th><th>Fatiga</th><th>Dolor</th><th>Control</th><th>Técnica</th><th>FC</th><th>Notas</th><th></th></tr></thead><tbody>${state.logs.slice().reverse().map((l,i)=>`<tr><td>${l.date}</td><td>${l.week}</td><td>${l.min}</td><td>${l.km||''}</td><td>${l.rpe||''}</td><td>${l.fatigue||''}</td><td>${l.pain??''}</td><td>${l.control||''}</td><td>${l.technique||''}</td><td>${l.hr||''}</td><td>${l.notes||''}</td><td><button class="delete" data-del="${state.logs.length-1-i}">×</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Todavía no hay sesiones registradas.</div>';document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{state.logs.splice(+b.dataset.del,1);save();renderLogs();toast('Sesión eliminada')})}
+function renderLogs(){logWeek.innerHTML=W.map((w,i)=>`<option value="${i+1}">Semana ${i+1} · ${w.title}</option>`).join('');logDate.value ||= new Date().toISOString().slice(0,10);renderCoach();logTable.innerHTML=state.logs.length?`<table><thead><tr><th>Fecha</th><th>Sem</th><th>Día</th><th>Min</th><th>Km</th><th>RPE</th><th>Fatiga</th><th>Dolor</th><th>Control</th><th>Técnica</th><th>FC</th><th>Notas</th><th></th></tr></thead><tbody>${state.logs.slice().reverse().map((l,i)=>`<tr><td>${l.date}</td><td>${l.week}</td><td>${["Lun","Mar","Mié","Jue","Vie","Sáb"][l.day??0]}</td><td>${l.min}</td><td>${l.km||''}</td><td>${l.rpe||''}</td><td>${l.fatigue||''}</td><td>${l.pain??''}</td><td>${l.control||''}</td><td>${l.technique||''}</td><td>${l.hr||''}</td><td>${l.notes||''}</td><td><button class="delete" data-del="${state.logs.length-1-i}">×</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Todavía no hay sesiones registradas.</div>';document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{state.logs.splice(+b.dataset.del,1);save();renderLogs();toast('Sesión eliminada')})}
 function updateHeader(){let all=0,done=0,sessions=0;W.forEach((w,i)=>{let p=progressWeek(i);all+=p.all;done+=p.done;if(p.done>0)sessions++});let pct=all?done/all*100:0;pctEl=document.getElementById('pct');pctEl.textContent=Math.round(pct)+'%';document.querySelector('.ring').style.background=`conic-gradient(var(--red) ${pct*3.6}deg,#f2d9d0 0deg)`;doneCount.textContent=done;weekStat.textContent=`${state.week+1}/${W.length}`;phaseStat.textContent=W[state.week].phase;volumeStat.textContent=W[state.week].volume;sessionsStat.textContent=`${sessions}/${W.length*6}`}
 function render(){renderRail();renderPlan();renderSkills();renderResources();renderLogs();updateHeader()}
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1600)}
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.tabPanel').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.tab+'Tab').classList.remove('hidden')});
-logForm.onsubmit=e=>{e.preventDefault();state.logs.push({date:logDate.value,week:+logWeek.value,min:+logMin.value,km:+logKm.value,rpe:+logRpe.value,hr:+logHr.value,fatigue:+logFatigue.value,pain:+logPain.value,control:+logControl.value,technique:+logTechnique.value,notes:logNotes.value});save();logForm.reset();logDate.value=new Date().toISOString().slice(0,10);renderLogs();toast('Sesión registrada ✓')};
+logForm.onsubmit=e=>{e.preventDefault();state.logs.push({date:logDate.value,week:+logWeek.value,day:+logDay.value,min:+logMin.value,km:+logKm.value,rpe:+logRpe.value,hr:+logHr.value,fatigue:+logFatigue.value,pain:+logPain.value,control:+logControl.value,technique:+logTechnique.value,notes:logNotes.value});save();logForm.reset();logDate.value=new Date().toISOString().slice(0,10);renderLogs();toast('Sesión registrada ✓')};
 exportBtn.onclick=()=>{let blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='return-to-skating-progreso.json';a.click();URL.revokeObjectURL(a.href);toast('Progreso exportado')};importBtn.onclick=()=>importFile.click();importFile.onchange=()=>{let f=importFile.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{let x=JSON.parse(r.result);if(!x.done||!x.logs)throw 0;Object.assign(state,x);save();render();toast('Progreso importado ✓')}catch{toast('Archivo no válido')}};r.readAsText(f)};
 const savedTheme=localStorage.getItem('rts13_theme')||'light';
 if(savedTheme==='dark')document.documentElement.classList.add('dark');
