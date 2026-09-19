@@ -23,3 +23,12 @@ Sube `index.html`, `styles.css` y `app.js` a GitHub y conecta el repositorio con
 ## Datos
 
 El progreso se almacena localmente en el navegador mediante `localStorage`. Utiliza Exportar para crear una copia de seguridad antes de cambiar de dispositivo o navegador.
+
+
+## v4
+- 13 semanas reales (se añadió una semana de consolidación antes del test final).
+- Coach adaptativo según RPE, fatiga, dolor, control y técnica.
+- Contraste reforzado en modo oscuro.
+- Favicon SVG de patín.
+- Enlaces Rollerblade muestran el título oficial del vídeo.
+- Encabezado genérico sin referencia a 3×110.
