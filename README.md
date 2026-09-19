@@ -1,4 +1,4 @@
-# Return to Skating — 13 semanas
+# Return to Skating — 13 semanas · v6
 
 Aplicación web estática para acompañar un programa progresivo de patinaje inline. Puede utilizarse como guía por principiantes, intermedios o personas que regresan al patinaje.
 
@@ -56,3 +56,17 @@ La app usa RPE, fatiga, molestias, control y técnica para ajustar visualmente l
 - ACSM — exercise prescription and gradual progression principles.
 
 Estas fuentes apoyan especialmente el aprendizaje inicial de postura, frenado, giro y stride, el uso de protección, la elección de superficies seguras y la progresión gradual. No se presenta ninguna cifra concreta de minutos como una norma oficial de la disciplina.
+
+
+## v6 — objetivos y entorno
+- Cada una de las 13 semanas incluye un objetivo general, expectativas, criterios de salida y tres objetivos marcables.
+- Se distingue explícitamente entre rodaje técnico, exterior controlado y rodaje urbano sencillo.
+- El entorno recomendado progresa de 🔵 controlado a 🟡 exterior controlado y 🟢 urbano sencillo, pero la habilidad manda sobre el calendario.
+- El Coach modifica visualmente la siguiente sesión sin alterar el plan base: puede reducir carga, retirar temporalmente aceleraciones/hockey stop y priorizar T-stop cuando el control registrado es bajo.
+- La progresión de entorno se basa en recomendaciones de Rollerblade para empezar en superficies lisas, planas y libres de tráfico/obstáculos y dominar el frenado antes de pendientes; las cifras exactas de volumen siguen siendo decisiones de programación conservadora, no normas oficiales.
+
+### Referencias verificadas
+- Rollerblade, Time to Learn: https://www.rollerblade.com/usa/en/time-to-learn
+- Rollerblade, Technical Manual: https://www.rollerblade.com/assets/pdf/manual.pdf
+- PubMed: In-line skating — use of protective equipment, falling patterns, and injuries: https://pubmed.ncbi.nlm.nih.gov/9641440/
+- PubMed: Injury patterns and prophylaxis in inline skating: https://pubmed.ncbi.nlm.nih.gov/15856162/

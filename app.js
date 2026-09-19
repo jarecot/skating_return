@@ -24,8 +24,9 @@ function rbFor(exercise){
 
 const RB_LEARN='https://www.rollerblade.com/usa/en/time-to-learn';
 const RB_BACK='https://www.rollerblade.com/usa/en/the-rollerblade-experience/urban/danny-s-point-how-to-skate-backwards';
-const state=JSON.parse(localStorage.getItem('rts13_v2')||'null')||{week:0,done:{},logs:[],skills:{},profile:'returning'};
-state.profile=state.profile||'returning';
+const state=JSON.parse(localStorage.getItem('rts13_v2')||'null')||{week:0,done:{},logs:[],skills:{},profile:'past',weekObjectives:{}};
+state.profile=state.profile||'past';
+state.weekObjectives=state.weekObjectives||{};
 const save=()=>localStorage.setItem('rts13_v2',JSON.stringify(state));
 const ex=(name,dose,desc,video,notes='')=>({name,dose,desc,video,notes});
 const day=(name,goal,exs)=>({name,goal,exs});
@@ -157,6 +158,39 @@ const resources=[
  ['Danny’s Point: How to skate backwards','Rollerblade · Backwards progression','https://www.rollerblade.com/usa/en/the-rollerblade-experience/urban/danny-s-point-how-to-skate-backwards',RB_BACK],
  ['YouTube technique search','Búsqueda complementaria por técnica','inline skating beginner technique tutorial','']
 ];
+const WEEK_GUIDE=[
+ {objective:'Recuperar equilibrio y confianza básica sobre ruedas.',expect:'Es normal sentir rigidez y necesitar pausas frecuentes. La prioridad es volver a sentir el centro de gravedad, no acumular kilómetros.',environment:'🔵 Controlado — cancha, pista o parqueadero vacío, plano, liso, limpio y sin tráfico.',level:'Base: sin pendientes ni obstáculos móviles.'},
+ {objective:'Hacer que el frenado y el control de velocidad sean respuestas confiables.',expect:'El frenado puede sentirse torpe al principio. Repite a baja velocidad hasta que la postura de frenado sea automática.',environment:'🔵 Controlado — superficie perfectamente plana. Todavía no usar calles ni pendientes como zona de aprendizaje.',level:'Puerta: antes de aumentar velocidad debes poder reducirla y detenerte con control.'},
+ {objective:'Mejorar la zancada, el glide y la economía del movimiento.',expect:'El reto pasa de “no caer” a desplazarte con menos pasos y menos tensión. La calidad del empuje importa más que la distancia.',environment:'🔵 Controlado — espacio amplio y conocido; exterior solo si está libre de tráfico y obstáculos.',level:'Puerta: mantener trayectoria y frenado sin perder postura.'},
+ {objective:'Dominar giros básicos y comenzar el crossover a velocidad baja.',expect:'Las curvas pueden exigir más control de un lado que del otro. La asimetría es normal; trabaja ambos sentidos.',environment:'🔵 Controlado — curvas amplias en pista/cancha o espacio exterior muy predecible.',level:'Puerta: giro y frenado antes de introducir recorridos urbanos.'},
+ {objective:'Introducir desplazamiento hacia atrás y transiciones con amplio margen de seguridad.',expect:'Mirar hacia atrás y cambiar de orientación aumenta la carga cognitiva. Hazlo lento y con espacio libre.',environment:'🔵 Controlado — solo espacio amplio, plano y despejado. Nada de tráfico.',level:'Puerta: transición limpia a velocidad mínima antes de usarla fuera del entorno controlado.'},
+ {objective:'Controlar la velocidad sin depender de ganar velocidad primero.',expect:'La velocidad empieza a ser una variable de entrenamiento, pero nunca debe superar tu capacidad de frenado.',environment:'🟡 Exterior controlado — paseo/ciclovía muy tranquila y plana, previamente inspeccionada; preferentemente acompañado.',level:'No usar pendientes ni cruces de tráfico para practicar velocidad.'},
+ {objective:'Aumentar la potencia del empuje manteniendo técnica y control.',expect:'Sentirás más demanda muscular, pero no debería convertirse en sprint. Si la postura se rompe, reduce intensidad.',environment:'🟡 Exterior controlado o pista — superficie conocida, plana y con espacio para frenar.',level:'La potencia se añade solo dentro de un margen de frenado cómodo.'},
+ {objective:'Aumentar el tiempo sobre ruedas sin deteriorar la técnica.',expect:'La fatiga puede hacer que vuelvas a una postura alta o pierdas precisión. Es una señal para bajar ritmo, no para forzar.',environment:'🟡 Exterior controlado — recorrido conocido, plano y predecible; evitar tráfico y superficies deterioradas.',level:'Rodaje largo ≠ rodaje urbano complejo.'},
+ {objective:'Transferir habilidades a un entorno exterior real de baja complejidad.',expect:'La dificultad cambia por el entorno: juntas, textura, peatones y pequeños cambios de superficie requieren anticipación.',environment:'🟢 Rodaje exterior/urbano sencillo — ciclovía o paseo amplio, tranquilo, plano y previamente recorrido a pie.',level:'Solo si frenado, giros y control son consistentes. Preferible acompañado.'},
+ {objective:'Explorar aceleraciones submáximas conservando margen de frenado.',expect:'Las aceleraciones son cortas. No persigas velocidad máxima; termina cada repetición con control completo.',environment:'🟡 Exterior controlado o pista — tramo recto, plano, despejado y con zona suficiente para desacelerar.',level:'No combinar aceleración con tráfico, bajadas o superficies desconocidas.'},
+ {objective:'Integrar técnica, resistencia y lectura del entorno en sesiones completas.',expect:'La sesión se parecerá más a una salida recreativa, pero la técnica sigue mandando sobre el ritmo.',environment:'🟢 Rodaje urbano sencillo — recorrido conocido y de baja complejidad; evita cruces conflictivos y pendientes.',level:'Si el entorno obliga a improvisar frenadas, el recorrido es demasiado difícil.'},
+ {objective:'Consolidar las habilidades principales y reducir errores antes de evaluar.',expect:'Puede parecer una semana “más fácil”. La intención es convertir movimientos aprendidos en patrones consistentes.',environment:'🟢 Exterior controlado/urbano sencillo según habilidades; vuelve a 🔵 si la técnica fluctúa.',level:'Calidad y simetría > velocidad o kilómetros.'},
+ {objective:'Evaluar el progreso sin convertir el test en una competición.',expect:'La mejora puede verse en control, confianza, simetría y menor esfuerzo, aunque la velocidad no cambie.',environment:'🔵 o 🟡 según la prueba — usa el entorno más seguro que permita repetir los tests de forma comparable.',level:'No se desbloquea un entorno más difícil solo por completar el test.'}
+];
+W.forEach((w,i)=>Object.assign(w,WEEK_GUIDE[i]));
+const WEEK_OBJECTIVES=[
+ ['Mantener postura estable durante 60 s.','Desplazarte 10–15 min a RPE 3–4 sin perder control.','Practicar el gesto de frenado y detenerte de forma controlada a baja velocidad.'],
+ ['Realizar T-stop a ambos lados a baja velocidad.','Usar heel brake de forma progresiva si el patín lo permite.','Completar 25–30 min fáciles sin deterioro importante de postura.'],
+ ['Mantener glide sobre un pie durante 10–20 m por lado.','Realizar una zancada lateral fluida y simétrica.','Completar 30–35 min a RPE 4–5 conservando técnica.'],
+ ['Ejecutar A-frame turn a ambos lados con radio amplio.','Realizar parallel turn básico sin perder trayectoria.','Practicar crossover lento sin aumentar velocidad para compensar.'],
+ ['Desplazarte hacia atrás con pasos/swizzle controlados.','Realizar transiciones a velocidad mínima en espacio amplio.','Mantener frenado y orientación sin perder el control.'],
+ ['Controlar velocidad y detenerte antes de agotar el espacio.','Completar aceleraciones submáximas sin perder postura.','Realizar una sesión exterior corta solo en recorrido plano y conocido.'],
+ ['Mantener power stride sin convertirlo en sprint.','Ejecutar crossover fluido a ambos lados.','Completar 40–50 min con técnica estable.'],
+ ['Completar 50–60 min con RPE 4–5 sin deterioro marcado.','Mantener frenado y giros después de acumular fatiga.','Reconocer cuándo reducir ritmo por pérdida de técnica.'],
+ ['Recorrer un circuito exterior sencillo y conocido.','Gestionar cambios de textura menores sin perder postura.','Frenar y girar con anticipación ante peatones/obstáculos previsibles.'],
+ ['Completar aceleraciones de 8–10 s a RPE ≤6.','Recuperar velocidad segura antes de cada repetición.','No depender de pendientes para generar velocidad.'],
+ ['Integrar stride, giros, frenado y backwards en una sesión.','Completar un rodaje urbano sencillo sin improvisaciones peligrosas.','Mantener técnica durante una sesión larga a RPE 4–6.'],
+ ['Repetir habilidades principales con menor variabilidad.','Comparar simetría izquierda/derecha con semanas anteriores.','Llegar al test sin fatiga acumulada innecesaria.'],
+ ['Repetir los tests técnicos de semanas 1/4/8/13.','Registrar RPE, control, técnica y molestias.','Identificar qué habilidades están consolidadas y cuáles requieren más práctica.']
+];
+W.forEach((w,i)=>w.objectives=WEEK_OBJECTIVES[i]);
+
 const skills=[
  ['Postura y equilibrio','Calidad 1–5','Mantener postura durante 60 s sin tensión excesiva.'],['One-foot glide','segundos por lado','Tiempo estable sobre un pie, sin cruzar brazos ni perder línea.'],['T-stop','metros para detener','Desde velocidad moderada, frenar de forma progresiva y repetible.'],['Parallel turn','calidad 1–5','Radio y trayectoria similares en ambos sentidos.'],['Crossover','segundos continuos/lado','Cruces fluidos sin levantarse ni perder línea.'],['Backwards','metros continuos','Trayectoria estable mirando por encima del hombro.'],['Transition','repeticiones limpias','Forward ↔ backward sin perder equilibrio.'],['Slalom','tiempo / circuito','Mantener trayectoria y postura con conos separados.'],['Hockey stop','calidad 1–5','Solo medir si ya es técnicamente seguro.']
 ];
@@ -187,38 +221,61 @@ function scaledVolume(vol){
 }
 function coachAdjustment(){
  const l=state.logs[state.logs.length-1];
- if(!l || Number(l.week)!==state.week+1)return {level:'neutral',factor:1,title:'Sin ajuste todavía',text:'Registra una sesión para que el Coach adapte la siguiente.'};
+ if(!l)return {level:'neutral',factor:1,title:'Sin ajuste todavía',text:'Registra una sesión para que el Coach adapte visualmente la siguiente.'};
  const r=+l.rpe||0,f=+l.fatigue||0,p=+l.pain||0,c=+l.control||0,t=+l.technique||0;
- if(p>=4||r>=9||f>=5||c===1||t===1)return {level:'red',factor:.55,title:'Recuperación / técnica fácil',text:'Próxima sesión: reduce ~45%. Sin velocidad, hockey stop ni habilidades nuevas. Si el dolor es agudo, articular o persiste, detén el entrenamiento y busca valoración profesional.'};
- if(p>=2||r>=7||f>=4||c===2||t===2)return {level:'yellow',factor:.75,title:'Repetir y reducir carga',text:'Próxima sesión: reduce ~25%. Mantén habilidades ya aprendidas; no avances de nivel hasta recuperar control y técnica.'};
- if(r>=8)return {level:'yellow',factor:.8,title:'Carga alta',text:'Próxima sesión: reduce ~20% y conserva el foco técnico.'};
- if(r&&r<=6&&f&&f<=3&&p<=1&&c>=4&&t>=4)return {level:'green',factor:1.05,title:'Progresión pequeña',text:'Próxima sesión: mantén el plan y aumenta solo una variable, como máximo ~5–10%.'};
- return {level:'neutral',factor:1,title:'Mantener el plan',text:'Usa la progresión prevista y prioriza calidad sobre velocidad.'};
+ if(p>=4||r>=9||f>=5||c===1||t===1)return {level:'red',factor:.55,title:'Reducir y recuperar',text:'La siguiente sesión se adapta: ~45% menos carga, sin aceleraciones ni hockey stop y sin habilidades nuevas. Si hay dolor agudo, articular o persistente, detén el entrenamiento y busca valoración profesional.'};
+ if(p>=2||r>=7||f>=4||c===2||t===2)return {level:'yellow',factor:.75,title:'Mantener y reducir',text:'La siguiente sesión se adapta: ~25% menos carga. Mantén habilidades conocidas y no desbloquees una habilidad nueva.'};
+ if(r&&r<=6&&f&&f<=3&&p<=1&&c>=4&&t>=4)return {level:'green',factor:1.05,title:'Progresión pequeña',text:'La siguiente sesión mantiene el plan y puede aumentar una sola variable en ~5–10%, siempre que la técnica siga limpia.'};
+ return {level:'neutral',factor:1,title:'Mantener el plan',text:'Usa la sesión prevista y prioriza calidad. Faltan datos suficientes para una adaptación más agresiva.'};
 }
-function recommendedSession(){
- const adj=coachAdjustment();
- const w=W[state.week];
- const day=w.days.find((d,i)=>{const last=state.logs[state.logs.length-1];return !last||i!==Number(last.day??-1)})||w.days[0];
- return {adj,day};
-}
+function recommendedSession(){return nextSessionInfo();}
 function progressWeek(wi){let all=0,done=0;W[wi].days.forEach((d,di)=>d.exs.forEach((x,ei)=>{if(!visibleExercise(x,wi))return;all++;if(state.done[`${wi}-${di}-${ei}`])done++}));return {all,done,p:all?done/all*100:0}}
 function renderRail(){weekRail.innerHTML=W.map((w,i)=>{let p=progressWeek(i);return `<button class="weekBtn ${i===state.week?'active':''}" data-w="${i}"><span class="num">SEMANA ${i+1}</span><span class="title">${w.title}</span><span class="mini">${w.phase}</span><div class="bar"><i style="width:${p.p}%"></i></div></button>`}).join('');document.querySelectorAll('.weekBtn').forEach(b=>b.onclick=()=>{state.week=+b.dataset.w;save();render()})}
+function objectiveState(wi){return state.weekObjectives[wi]||{};}
+function objectiveProgress(wi){const o=W[wi].objectives||[];const st=objectiveState(wi);const done=o.filter((_,i)=>!!st[i]).length;return {done,total:o.length,p:o.length?done/o.length*100:0};}
+function toggleObjective(wi,i){state.weekObjectives[wi]=state.weekObjectives[wi]||{};state.weekObjectives[wi][i]=!state.weekObjectives[wi][i];save();render();}
+function adaptedExercise(x,adj){
+ let dose=scaledDose(x.dose), name=x.name, note='';
+ if(adj.level==='red'){
+   if(/Aceleración|Hockey stop|Velocidad/i.test(name)) return null;
+   dose=reduceDose(dose,.55); note='Adaptado por Coach: baja la carga y mantén solo habilidades conocidas.';
+ }
+ if(adj.level==='yellow'){
+   dose=reduceDose(dose,.75); note='Adaptado por Coach: reduce el volumen; no avances la dificultad.';
+ }
+ if(adj.controlLow && /T-stop/i.test(name)) { dose='8 × cada lado (prioridad)'; note='Adaptado por Coach: repetir T-stop hasta recuperar control consistente.'; }
+ return {dose,note};
+}
+function reduceDose(dose,f){return dose.replace(/(\d+)\s*[–-]\s*(\d+)\s*min/g,(m,a,b)=>`${Math.max(1,Math.round(+a*f))}–${Math.max(1,Math.round(+b*f))} min`).replace(/(\d+)\s*×\s*(\d+)/g,(m,a,b)=>`${Math.max(1,Math.round(+a*f))} × ${Math.max(1,Math.round(+b*f))}`);}
+function nextSessionInfo(){
+ const w=W[state.week], adj=coachAdjustment(); let di=0;
+ const logs=state.logs.filter(l=>Number(l.week)===state.week+1);
+ if(logs.length) di=Math.min(5,Math.max(...logs.map(l=>Number(l.day)||0))+1);
+ const day=w.days[di]||w.days[0];
+ const controlLow=logs.length?Number(logs[logs.length-1].control||0)<=2:false;
+ return {adj,day,di,controlLow};
+}
 function renderPlan(){
- const w=W[state.week],p=progressWeek(state.week),rec=recommendedSession(),f=rec.adj.factor;
+ const w=W[state.week],p=progressWeek(state.week),rec=recommendedSession(),f=rec.adj.factor,op=objectiveProgress(state.week),obj=objectiveState(state.week);
  let html=`<div class="profileBar"><div><span class="eyebrow">NIVEL DE ENTRADA</span><strong>${profile().label}</strong><small>${profile().desc}</small></div><select id="profileSelect">${Object.entries(PROFILES).map(([k,v])=>`<option value="${k}" ${k===state.profile?'selected':''}>${v.label}</option>`).join('')}</select></div>`;
- html+=`<div class="coach next ${rec.adj.level}"><div class="coachDot"></div><div><span class="eyebrow">PRÓXIMA SESIÓN RECOMENDADA</span><h3>${rec.adj.title}</h3><p>${rec.adj.text}</p><div class="nextSession"><b>${rec.day.name}</b> · ${rec.day.goal} · ajuste ${Math.round((f-1)*100)}%</div></div></div>`;
+ html+=`<div class="coach next ${rec.adj.level}"><div class="coachDot"></div><div><span class="eyebrow">PRÓXIMA SESIÓN RECOMENDADA</span><h3>${rec.adj.title}</h3><p>${rec.adj.text}</p><div class="nextSession"><b>${rec.day.name}</b> · ${rec.day.goal} · ${rec.adj.level==='neutral'?'sin ajuste':`carga ${Math.round(f*100)}%`}</div><div class="adaptedNote">El <b>plan base no cambia</b>. Esta tarjeta solo modifica visualmente la próxima sesión a partir de tu último registro.</div></div></div>`;
  html+=`<div class="weekHero"><div><span class="phaseBadge">${w.phase}</span><h2>Semana ${state.week+1} · ${w.title}</h2><p>${w.focus}</p><div class="weekTargets">${w.targets.map(x=>'<span>'+x+'</span>').join('')}</div></div><div><strong style="font-size:26px">${p.done}/${p.all}</strong><div>ejercicios</div><div style="margin-top:5px">${scaledVolume(w.volume)}</div></div></div>`;
+ html+=`<section class="weekGuide"><div class="guideMain"><span class="eyebrow">🎯 OBJETIVO DE LA SEMANA</span><h3>${w.objective}</h3><p><b>🧠 Qué esperar:</b> ${w.expect}</p><p><b>🌎 Entorno:</b> ${w.environment}</p><p class="guideLevel"><b>🔐 Criterio:</b> ${w.level}</p></div><div class="objectiveBox"><div><b>Objetivos cumplidos</b><strong>${op.done}/${op.total}</strong></div><div class="bar"><i style="width:${op.p}%"></i></div><div class="objectiveList">${w.objectives.map((x,i)=>`<label><input type="checkbox" data-obj="${i}" ${obj[i]?'checked':''}> <span>${x}</span></label>`).join('')}</div></div></section>`;
+ html+=`<div class="environmentBanner"><b>🌎 Entorno de esta semana</b><span>${w.environment}</span></div>`;
  html+=w.days.map((d,di)=>{
    const visible=d.exs.filter(x=>visibleExercise(x,state.week));
    const dd=visible.filter(x=>state.done[state.week+'-'+di+'-'+d.exs.indexOf(x)]).length;
-   let body=visible.map(x=>{const ei=d.exs.indexOf(x),k=state.week+'-'+di+'-'+ei,c=!!state.done[k];const note=x.notes||'Criterio: termina las repeticiones manteniendo postura, control y respiración. Si la técnica se degrada, reduce velocidad o volumen.';const rb=rbFor(x);return '<div class="exercise '+(c?'completed':'')+'" data-ex="'+k+'"><input type="checkbox" '+(c?'checked':'')+'><div><h4>'+x.name+'</h4><p>'+x.desc+'</p><div class="resourceLinks"><a target="_blank" rel="noopener" href="'+YT(x.video)+'">▶ YouTube</a>'+(rb?'<a target="_blank" rel="noopener" href="'+rb.url+'">🎥 Rollerblade · '+rb.name+'</a>':'<a target="_blank" rel="noopener" href="'+RB+'">🎥 Rollerblade · Advice</a>')+'<button class="detail">ℹ️ Ver criterio</button></div><div class="exerciseNotes">'+note+'</div></div><div class="dose">'+scaledDose(x.dose)+'</div></div>'}).join('');
-   return '<article class="day"><div class="dayHead" data-day="'+di+'"><div><div class="dayTitle">'+['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][di]+' · '+d.name+'</div><div class="dayMeta">'+d.goal+'</div></div><div class="dayProgress">'+dd+'/'+visible.length+'</div></div><div class="dayBody">'+body+'</div></article>';}).join('');
+   const isNext=di===rec.di;
+   let body=visible.map(x=>{const ei=d.exs.indexOf(x),k=state.week+'-'+di+'-'+ei,c=!!state.done[k];const a=isNext?adaptedExercise(x,{...rec.adj,controlLow:rec.controlLow}):{dose:scaledDose(x.dose),note:''};if(!a)return '<div class="exercise skipped"><div></div><div><h4>'+x.name+'</h4><p>⛔ Retirado temporalmente por el Coach debido a la carga/fatiga registrada.</p></div></div>';const note=x.notes||'Criterio: termina las repeticiones manteniendo postura, control y respiración. Si la técnica se degrada, reduce velocidad o volumen.';const rb=rbFor(x);return '<div class="exercise '+(c?'completed ':'')+(isNext?'nextExercise ':'')+'" data-ex="'+k+'"><input type="checkbox" '+(c?'checked':'')+'><div><h4>'+x.name+(isNext?' <span class="adaptedBadge">SESIÓN RECOMENDADA</span>':'')+'</h4><p>'+x.desc+'</p><div class="resourceLinks"><a target="_blank" rel="noopener" href="'+YT(x.video)+'">▶ YouTube</a>'+(rb?'<a target="_blank" rel="noopener" href="'+rb.url+'">🎥 Rollerblade · '+rb.name+'</a>':'<a target="_blank" rel="noopener" href="'+RB+'">🎥 Rollerblade · Advice</a>')+'<button class="detail">ℹ️ Ver criterio</button></div><div class="exerciseNotes">'+note+(a.note?'<br><b>Coach:</b> '+a.note:'')+'</div></div><div class="dose">'+a.dose+'</div></div>'}).join('');
+   return '<article class="day '+(isNext?'recommendedDay':'')+'"><div class="dayHead" data-day="'+di+'"><div><div class="dayTitle">'+['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado'][di]+' · '+d.name+(isNext?' · ⭐ siguiente':'')+'</div><div class="dayMeta">'+d.goal+'</div></div><div class="dayProgress">'+dd+'/'+visible.length+'</div></div><div class="dayBody">'+body+'</div></article>';}).join('');
  weekContent.innerHTML=html;
  document.getElementById('profileSelect').onchange=e=>{state.profile=e.target.value;save();render()};
+ document.querySelectorAll('[data-obj]').forEach(x=>x.onchange=()=>toggleObjective(state.week,+x.dataset.obj));
  document.querySelectorAll('.exercise input').forEach(inp=>inp.onchange=()=>{let k=inp.closest('.exercise').dataset.ex;state.done[k]=inp.checked;save();render()});
  document.querySelectorAll('.detail').forEach(b=>b.onclick=()=>b.closest('.exercise').classList.toggle('expanded'));
  document.querySelectorAll('.dayHead').forEach(h=>h.onclick=()=>{let body=h.nextElementSibling;body.style.display=body.style.display==='none'?'block':'none'});
 }
+
 function renderSkills(){skillGrid.innerHTML=skills.map((s,i)=>{let v=state.skills[i]||{};return `<article class="skillCard"><div class="skillTop"><div><h3>${s[0]}</h3><p>${s[2]}</p></div><span class="tag">${s[1]}</span></div><div class="skillInput"><label>Semana 1<input data-s="${i}" data-w="1" value="${v[1]||''}" placeholder="—"></label><label>Semana 4<input data-s="${i}" data-w="4" value="${v[4]||''}" placeholder="—"></label><label>Semana 8<input data-s="${i}" data-w="8" value="${v[8]||''}" placeholder="—"></label><label>Semana 13<input data-s="${i}" data-w="13" value="${v[13]||''}" placeholder="—"></label></div></article>`}).join('');document.querySelectorAll('.skillInput input').forEach(x=>x.onchange=()=>{let i=x.dataset.s,w=x.dataset.w;state.skills[i]=state.skills[i]||{};state.skills[i][w]=x.value;save();toast('Prueba guardada')})}
 function renderResources(){resourceGrid.innerHTML=resources.map(r=>`<article class="resourceCard"><div class="eyebrow">TÉCNICA</div><h3>${r[0]}</h3><p>${r[1]}</p>${r[3]?`<a target="_blank" href="${r[3]}">Sitio oficial</a>`:''}${r[2].startsWith('http')?`<a target="_blank" href="${r[2]}">Abrir recurso</a>`:`<a target="_blank" href="${YT(r[2])}">Buscar vídeos</a>`}</article>`).join('')}
 function coach(l){const r=+l.rpe||0,f=+l.fatigue||0,p=+l.pain||0,c=+l.control||0,t=+l.technique||0;if(p>=3||r>=8||f>=5)return {level:'red',icon:'🔴',title:'Recupera / reduce',text:'La próxima sesión debe ser fácil o de descanso. Evita velocidad y habilidades nuevas; si el dolor persiste o empeora, no patines hasta aclararlo.'};if(p>=1||r>=7||f>=4||(c&&c<=2)||(t&&t<=2))return {level:'yellow',icon:'🟡',title:'Mantén / ajusta',text:'Repite el nivel actual y reduce 15–25% el volumen o la velocidad. Prioriza técnica limpia y frenado.'};if(r&&r<=6&&f&&f<=3&&p===0&&c>=4&&t>=4)return {level:'green',icon:'🟢',title:'Puedes progresar',text:'Mantén la siguiente sesión prevista. Progresa solo una variable: tiempo, repeticiones o dificultad técnica.'};return {level:'blue',icon:'🔵',title:'Datos insuficientes',text:'Completa RPE, fatiga, dolor, control y técnica para una recomendación más precisa.'}}
@@ -236,7 +293,7 @@ function renderCoach(){
  el.innerHTML=`<div class="coach ${c.level}"><div class="coachDot"></div><div><span class="eyebrow">ÚLTIMA SESIÓN · SEMANA ${l.week}</span><h3>${c.title}</h3><p>${c.text}</p></div></div>`;
 }
 function renderLogs(){logWeek.innerHTML=W.map((w,i)=>`<option value="${i+1}">Semana ${i+1} · ${w.title}</option>`).join('');logDate.value ||= new Date().toISOString().slice(0,10);renderCoach();logTable.innerHTML=state.logs.length?`<table><thead><tr><th>Fecha</th><th>Sem</th><th>Día</th><th>Min</th><th>Km</th><th>RPE</th><th>Fatiga</th><th>Dolor</th><th>Control</th><th>Técnica</th><th>FC</th><th>Notas</th><th></th></tr></thead><tbody>${state.logs.slice().reverse().map((l,i)=>`<tr><td>${l.date}</td><td>${l.week}</td><td>${["Lun","Mar","Mié","Jue","Vie","Sáb"][l.day??0]}</td><td>${l.min}</td><td>${l.km||''}</td><td>${l.rpe||''}</td><td>${l.fatigue||''}</td><td>${l.pain??''}</td><td>${l.control||''}</td><td>${l.technique||''}</td><td>${l.hr||''}</td><td>${l.notes||''}</td><td><button class="delete" data-del="${state.logs.length-1-i}">×</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">Todavía no hay sesiones registradas.</div>';document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{state.logs.splice(+b.dataset.del,1);save();renderLogs();toast('Sesión eliminada')})}
-function updateHeader(){let all=0,done=0,sessions=0;W.forEach((w,i)=>{let p=progressWeek(i);all+=p.all;done+=p.done;if(p.done>0)sessions++});let pct=all?done/all*100:0;pctEl=document.getElementById('pct');pctEl.textContent=Math.round(pct)+'%';document.querySelector('.ring').style.background=`conic-gradient(var(--red) ${pct*3.6}deg,#f2d9d0 0deg)`;doneCount.textContent=done;weekStat.textContent=`${state.week+1}/${W.length}`;phaseStat.textContent=W[state.week].phase;volumeStat.textContent=W[state.week].volume;sessionsStat.textContent=`${sessions}/${W.length*6}`}
+function updateHeader(){let all=0,done=0,sessions=0;W.forEach((w,i)=>{let p=progressWeek(i);all+=p.all;done+=p.done;if(p.done>0)sessions++});let pct=all?done/all*100:0;pctEl=document.getElementById('pct');pctEl.textContent=Math.round(pct)+'%';document.querySelector('.ring').style.background=`conic-gradient(var(--red) ${pct*3.6}deg,#f2d9d0 0deg)`;doneCount.textContent=done;weekStat.textContent=`${state.week+1}/${W.length}`;phaseStat.textContent=W[state.week].phase;volumeStat.textContent=scaledVolume(W[state.week].volume);sessionsStat.textContent=`${sessions}/${W.length*6}`}
 function render(){renderRail();renderPlan();renderSkills();renderResources();renderLogs();updateHeader()}
 function toast(t){let x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1600)}
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.tabPanel').forEach(x=>x.classList.add('hidden'));document.getElementById(b.dataset.tab+'Tab').classList.remove('hidden')});
