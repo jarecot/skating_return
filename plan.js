@@ -50,7 +50,7 @@ const common={
  dryStrength:ex('Fuerza en seco','10–12 min','Sentadillas 2 × 12 · zancadas alternas 2 × 8/lado · puente de glúteo 2 × 12 · plancha 2 × 30 s. Sin patines, movimiento lento y controlado.','fuerza piernas gluteos patinaje en seco'),
  dryBalance:ex('Equilibrio en seco','6–8 min','Apoyo unipodal 3 × 30 s/lado sobre superficie estable; progresa con ojos cerrados o sobre cojín. Ideal para trabajar tobillo y cadera.','equilibrio unipodal ejercicios tobillo'),
  stretch:ex('Movilidad y estiramiento','5–8 min','Flexores de cadera, cuádriceps, isquios, gemelos y aductores, 30 s por grupo. Sin rebotes ni dolor.','estiramiento despues de patinar'),
- hockey:ex('Hockey stop — progresión','6–8 rep','Solo si T-stop es sólido. Practica primero el gesto a velocidad muy baja.','inline skating hockey stop tutorial','',true),
+ hockeySlot:{slot:'hockey',name:'Hockey stop',dose:'',desc:'',video:'',notes:'',hi:true},
 }
 add('Volver a sentir el patín','Readaptación','Equilibrio, postura, marcha y primer contacto con el frenado.', '90–120 min',['Superficie plana','RPE 3–4','Sin pendientes'],[
  day('Lun','Confianza + caídas', [common.fall,common.getup,common.stance,ex('Marcha en V','3 × 2 min','Pasos pequeños hasta conseguir deslizamiento.','inline skating beginner basic stride'),common.glide,ex('Frenado: gesto sin rodar','10 rep','Practica la posición sobre césped/alfombra antes de rodar.','inline skating heel brake braking technique')]),
@@ -91,7 +91,7 @@ add('Control de velocidad','Frenado avanzado','Acelerar solo dentro de una zona 
  day('Lun','Aceleración',[common.warm,common.speed,common.tstop]),
  day('Mar','Curvas',[common.parallel,common.carving,common.crossover]),
  day('Mié','Endurance',[common.dryStrength,common.warm,ex('Rodaje continuo','45 min','RPE 4–5.','inline skating fitness endurance')]),
- day('Jue','Hockey stop preparación',[ex('Gesto hockey stop','8 rep','Practica el pivote de pies sin velocidad.','inline skating hockey stop beginner','',true),ex('Hockey stop asistido','6 rep','Solo si T-stop es fiable y tienes mucho espacio.','inline skating hockey stop tutorial','',true),common.tstop]),
+ day('Jue','T-stop sólido (base del hockey stop)',[common.tstop]),
  day('Vie','Agilidad',[common.slalom,common.crossover,common.transition]),
  day('Sáb','Progresivo',[ex('Rodaje progresivo','45–50 min','10 min fácil → 15 moderado → 5 técnica → 10 fácil.','inline skating endurance progression')])]);
 add('Potencia técnica','Empuje','Aumentar calidad del empuje sin convertir la sesión en sprint.','145–185 min',['RPE 5–6','Power stride','Crossover fluido'],[
@@ -99,7 +99,7 @@ add('Potencia técnica','Empuje','Aumentar calidad del empuje sin convertir la s
  day('Mar','Crossover potente',[ex('Crossover con presión','8 × 45 s/lado','Más presión sobre el exterior; mantén el torso estable.','inline skating crossover technique'),common.parallel]),
  day('Mié','Endurance',[common.dryStrength,ex('Rodaje','45 min','RPE 4–5.','inline skating fitness endurance')]),
  day('Jue','Agilidad',[ex('Slalom controlado','6 × 2 min','Aumenta ritmo solo si mantienes trayectoria.','inline skating slalom technique'),common.transition]),
- day('Vie','Frenado',[common.tstop,common.hockey,common.brake]),
+ day('Vie','Frenado',[common.tstop,common.hockeySlot,common.brake]),
  day('Sáb','Intervalos',[ex('6 × 3 min moderado / 2 min fácil','30 min','Bloques moderados RPE 6; nunca sprint.','inline skating interval training','',true)])]);
 add('Resistencia + economía (descarga)','Descarga + base aeróbica','Semana de descarga: mantén la técnica con menos volumen; el objetivo es llegar fresco al bloque de aplicación.','115–150 min',['RPE 4–5','50–60 min continuo','Técnica bajo fatiga'],[
  day('Lun','Economía',[ex('Stride eficiente','5 × 3 min','Menos pasos innecesarios; deja rodar después de cada empuje.','inline skating efficient stride'),common.carving]),
@@ -112,21 +112,21 @@ add('Urban básico','Aplicación','Aprender a leer superficie y entorno sin intr
  day('Lun','Superficie',[ex('Texturas suaves','15 min','Pequeñas variaciones de pavimento a velocidad baja; rodillas flexionadas.','inline skating rough surface technique'),ex('Juntas/bumps pequeños','10 min','Practica absorber con tobillos y rodillas; no saltar.','inline skating skating over bumps')]),
  day('Mar','Urban',[common.aframe,common.carving,ex('Lectura de obstáculos','10 min','Acércate, evalúa, reduce velocidad y decide; no subas bordillos todavía.','inline skating urban safety')]),
  day('Mié','Endurance',[ex('Rodaje','50 min','Ruta plana conocida.','inline skating endurance')]),
- day('Jue','Skills',[common.backward,common.transition,common.hockey]),
+ day('Jue','Skills',[common.backward,common.transition,common.hockeySlot]),
  day('Vie','Control',[ex('Stop-go','20–25 min','Acelera 5 s, estabiliza y frena; 8–10 ciclos.','inline skating stop and go workout')]),
  day('Sáb','Ruta técnica',[ex('Ruta segura','55–60 min','Superficie conocida, sin tráfico y sin pendientes nuevas.','inline skating urban skating safety')])]);
 add('Velocidad submáxima','Velocidad','Explorar velocidad sin perder técnica ni margen de frenado.','150–195 min',['RPE 6 máximo','Aceleraciones cortas','Frenado controlado'],[
  day('Lun','Acceleration',[common.warm,ex('6 × 8–10 s','20 min','Aceleración progresiva; 90 s fácil.','inline skating acceleration technique','',true),common.tstop]),
  day('Mar','Technique',[ex('Power stride','15 min','Longitud y recuperación.','inline skating power stride','',true),common.crossover]),
  day('Mié','Endurance',[ex('Rodaje','50–60 min','RPE 4–5.','inline skating endurance')]),
- day('Jue','Braking',[ex('Speed control','15 min','Aumenta solo hasta una velocidad que puedas frenar con margen.','inline skating speed control'),common.hockey]),
+ day('Jue','Braking',[ex('Speed control','15 min','Aumenta solo hasta una velocidad que puedas frenar con margen.','inline skating speed control'),common.hockeySlot]),
  day('Vie','Agility',[common.slalom,common.transition]),
  day('Sáb','Intervals',[ex('8 × 2 min moderado / 2 min fácil','32 min','RPE 6 en bloques moderados.','inline skating interval training','',true)])]);
 add('Integración','Performance recreativa','Combinar habilidades en sesiones completas parecidas a un entrenamiento real.','165–210 min',['Técnica bajo fatiga','RPE 4–6','Sesión larga'],[
  day('Lun','Skills circuit',[ex('Circuito 1','25 min','Stride → carving → crossover → stop.','inline skating basic workout'),ex('Circuito 2','15 min','Backward → transition → forward → T-stop.','inline skating transitions backwards')]),
  day('Mar','Endurance',[ex('Rodaje','60 min','RPE 4–5.','inline skating endurance')]),
  day('Mié','Recuperación',[ex('Rodaje muy fácil','25–30 min','RPE 2–3; movilidad sobre ruedas.','inline skating easy skating')]),
- day('Jue','Speed + braking',[ex('10 × 10 s','25 min','Aceleración submáxima, recuperación amplia.','inline skating acceleration','',true),common.tstop,common.hockey]),
+ day('Jue','Speed + braking',[ex('10 × 10 s','25 min','Aceleración submáxima, recuperación amplia.','inline skating acceleration','',true),common.tstop,common.hockeySlot]),
  day('Vie','Agility',[ex('Slalom + crossovers','30 min','Bloques de 5 min.','inline skating slalom crossover')]),
  day('Sáb','Sesión larga',[ex('Rodaje','60–65 min','Técnica bajo fatiga; sin perseguir récord.','inline skating endurance')])]);
 add('Consolidación técnica','Consolidación','Reducir variabilidad y convertir las habilidades principales en patrones fiables antes del test final.','160–200 min',['Calidad > velocidad','Simetría ambos lados','RPE 4–5'],[
@@ -141,7 +141,7 @@ add('Evaluación final','Testing','Demostrar control y comparar con la semana 1 
  day('Mar','Test agilidad',[common.slalom,common.crossover]),
  day('Mié','Endurance',[ex('Rodaje','50–60 min','RPE 4–5; técnica constante.','inline skating endurance')]),
  day('Jue','Backwards',[ex('Backward glide','12 min','Control visual y postura.','inline skating backwards'),common.transition]),
- day('Vie','Frenado',[ex('Speed control','15 min','Compara confianza, distancia y control con semana 1.','inline skating speed control'),common.hockey]),
+ day('Vie','Frenado',[ex('Speed control','15 min','Compara confianza, distancia y control con semana 1.','inline skating speed control'),common.hockeySlot]),
  day('Sáb','Final 13 semanas',[ex('Sesión final técnica','60–70 min','10 fácil + 35–45 técnica/rodaje + 5–10 progresivo + 10 fácil. No buscar récord.','inline skating basic workout')])]);
 
 const resources=[
@@ -198,9 +198,8 @@ W.forEach((w,i)=>w.objectives=WEEK_OBJECTIVES[i]);
 W.forEach((w,i)=>w.objectives=WEEK_OBJECTIVES[i]);
 
 const PROFILES={
- none:{label:'Ninguna',desc:'Nunca he patinado',factor:.72,unlocks:{tstop:1,crossover:5,backward:7,transition:7,hockey:13}},
+ beginner:{label:'Principiante',desc:'Nunca he patinado o solo sé lo básico y estoy construyendo confianza',factor:.72,unlocks:{tstop:1,crossover:5,backward:7,transition:7,hockey:13}},
  past:{label:'Ya patiné antes',desc:'Tengo experiencia previa, pero estoy retomando',factor:.88,unlocks:{tstop:1,crossover:4,backward:5,transition:5,hockey:9}},
- beginner:{label:'Principiante',desc:'Sé lo básico y todavía estoy construyendo confianza',factor:.82,unlocks:{tstop:1,crossover:4,backward:6,transition:6,hockey:10}},
  intermediate:{label:'Intermedio',desc:'Patino con control y freno con seguridad',factor:1,unlocks:{tstop:1,crossover:3,backward:4,transition:4,hockey:8}},
  advanced:{label:'Avanzado',desc:'Tengo técnica sólida y experiencia consistente',factor:1.08,unlocks:{tstop:1,crossover:2,backward:3,transition:3,hockey:7}}
 };
@@ -222,3 +221,12 @@ const FINAL_TESTS=[
  {id:'t_glide',  name:'Glide unipodal',  unit:'s', how:'Segundos estables por pie. Promedio de ambos lados.'},
  {id:'t_rodaje', name:'Rodaje 20 min',   unit:'km', how:'Distancia recorrida a RPE 4–5 sostenido, mismo circuito que la semana 1.'}
 ];
+
+/* Escalera del hockey stop. Las semanas solo contienen un MARCADOR (common.hockeySlot);
+   qué peldaño se muestra depende del nivel del usuario (ver progression.js). */
+const HOCKEY_STAGES=[
+ ex('Gesto hockey stop','8 rep','Practica el pivote de pies sin velocidad.','inline skating hockey stop beginner','',true),
+ ex('Hockey stop asistido','6 rep','Solo si T-stop es fiable y tienes mucho espacio.','inline skating hockey stop tutorial','',true),
+ ex('Hockey stop — progresión','6–8 rep','Solo si T-stop es sólido. Practica primero el gesto a velocidad muy baja.','inline skating hockey stop tutorial','',true)
+];
+const HOCKEY_SLOT_WEEKS=W.map((w,i)=>w.days.some(d=>d.exs.some(x=>x.slot==='hockey'))?i+1:0).filter(Boolean);

@@ -163,3 +163,36 @@ details.day>.dayBody{display:block}
 /* Colores del gráfico con contraste >=3:1 en ambos temas (WCAG 1.4.11) */
 :root{--c-control:#287a67;--c-tech:#7C3F82;--c-pain:#E8543F}
 .dark{--c-control:#4fd1a5;--c-tech:#c58bd0;--c-pain:#ff8a75}
+
+/* ============================================================
+   v7.1 — Guía de ejercicio (qué es · pasos · error · criterio · vídeos)
+   ============================================================ */
+.exWhat{margin:2px 0 8px;color:var(--ink,inherit);line-height:1.45}
+.fromDay{display:inline-block;margin-left:6px;padding:1px 8px;border-radius:999px;background:#efe6fa;color:#5a3d78;font-size:10px;font-weight:800;letter-spacing:.02em;text-transform:uppercase;vertical-align:middle}
+.dark .fromDay{background:#3a2f55;color:#e2d4f5}
+
+.guide{display:flex;flex-direction:column;gap:10px}
+.gBlock{padding:10px 12px;border-radius:10px;background:rgba(124,63,130,.06);border-left:3px solid #b9a3c9}
+.gBlock b{display:block;margin-bottom:4px;font-size:12px;letter-spacing:.02em}
+.gBlock p{margin:0;font-size:13px;line-height:1.5}
+.gBlock ol{margin:4px 0 0;padding-left:20px;font-size:13px;line-height:1.55}
+.gBlock ol li{margin:3px 0;padding-left:2px}
+.gBlock.warn{background:#fff3ea;border-left-color:#e8843f}
+.gBlock.okBlock{background:#e9f6ef;border-left-color:#2f9e75}
+.gBlock.coachNote{background:#eef0fb;border-left-color:#5b6fd6}
+.dark .gBlock{background:rgba(255,255,255,.05);border-left-color:#7d6a92}
+.dark .gBlock.warn{background:#3d2a1e;border-left-color:#e8843f}
+.dark .gBlock.okBlock{background:#1e3a2f;border-left-color:#3fb98a}
+.dark .gBlock.coachNote{background:#262b4a;border-left-color:#7d8df0}
+
+/* Botones de vídeo: el de español destaca; los demás son secundarios */
+.vids{display:flex;flex-wrap:wrap;gap:8px}
+.vids .vid{display:inline-flex;align-items:center;gap:6px;padding:9px 13px;border-radius:999px;border:1.5px solid var(--line);background:transparent;color:inherit;font-size:13px;font-weight:700;text-decoration:none}
+.vids .vid:hover{background:rgba(124,63,130,.08)}
+.vids .primaryVid{background:#c0392b;border-color:#c0392b;color:#fff}
+.vids .primaryVid:hover{background:#a93226}
+.dark .vids .primaryVid{background:#e0544a;border-color:#e0544a;color:#1a1420}
+
+/* Día de descanso (nota informativa al final del plan) */
+.restNote{margin:12px 0;padding:12px 14px;border-radius:12px;border:1px dashed var(--line);font-size:13px;line-height:1.5;color:var(--muted)}
+.restNote b{color:inherit}

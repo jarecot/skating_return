@@ -4,8 +4,8 @@
    · Resto (js/css/iconos): CACHÉ PRIMERO con revalidación en segundo plano.
    · Otros orígenes (YouTube, Rollerblade): NO se interceptan.
    Al cambiar archivos, sube CACHE_VERSION. */
-const CACHE_VERSION = 'rts-v7.0.0';
-const CORE = ['./', './index.html', './styles.css', './plan.js', './coach.js', './store.js', './app.js',
+const CACHE_VERSION = 'rts-v7.1.0';
+const CORE = ['./', './index.html', './styles.css', './plan.js', './guide.js', './schedule.js', './progression.js', './coach.js', './store.js', './app.js',
               './manifest.webmanifest', './favicon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png'];
 
 self.addEventListener('install', e => {

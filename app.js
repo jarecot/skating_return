@@ -24,17 +24,33 @@ const exerciseKey = name => {
 };
 const visibleExercise = (x, wi) => { const k = exerciseKey(x.name); return !k || wi + 1 >= profile().unlocks[k]; };
 
-/** ID estable de un ejercicio (semana|día|slug). Sobrevive a reordenar el plan. */
-function exId(wi, di, x) {
-  const d = W[wi].days[di];
-  const occ = d.exs.slice(0, d.exs.indexOf(x)).filter(y => y.name === x.name).length;
-  return Store.exId(wi, di, x.name, occ);
+/** Peldaños de hockey stop que le tocan al usuario en la semana wi (0, 1 o 2 ejercicios), según su nivel. Ver progression.js. */
+const hockeyFor = wi => Progression.hockeyStages({ unlock: profile().unlocks.hockey, slotWeeks: HOCKEY_SLOT_WEEKS, week: wi + 1 }).map(i => HOCKEY_STAGES[i]);
+
+/** Ejercicios de un día con su ID estable (semana|día|nombre). El marcador de hockey se sustituye por su peldaño.
+ *  El ID depende del NOMBRE del ejercicio: sobrevive a reordenar el plan, a cambiar de calendario y de peldaño. */
+function dayEntries(wi, di) {
+  const seen = {}, out = [];
+  const add = x => { const o = seen[x.name] || 0; seen[x.name] = o + 1; out.push({ x, id: Store.exId(wi, di, x.name, o) }); };
+  W[wi].days[di].exs.forEach(x => (x.slot === 'hockey' ? hockeyFor(wi).forEach(add) : add(x)));
+  return out;
 }
 
-/** Días activos según preferencia: 0 = 6 días, 1 = 5 días (sin sábado), 2 = 4 días (Lun/Mar/Jue/Sáb). */
-const REST_PLANS = { 0: [0, 1, 2, 3, 4, 5], 1: [0, 1, 2, 3, 5], 2: [0, 2, 3, 5] };
-const activeDays = () => REST_PLANS[state.restDays] || REST_PLANS[0];
-const sessionsPerWeek = () => activeDays().length;
+/** Calendario (schedule.js): sesiones activas y qué días del plan hace cada una.
+ *  El contenido de un día omitido NO se pierde: se traslada a otra sesión. */
+const layout = () => Schedule.layout(state.restDays);
+const sessionsPerWeek = () => layout().length;
+/** Ejercicios de una sesión, cada uno con el índice de su día ORIGINAL del plan (así su ID no cambia con el modo). */
+function sessionExercises(wi, session) {
+  const out = [];
+  session.sources.forEach(di => dayEntries(wi, di).forEach(({ x, id }) => out.push({ x, di, id })));
+  return out;
+}
+/** Nombre legible de una sesión: si fusiona días, lo dice. */
+function sessionTitle(session) {
+  const names = session.sources.map(d => Schedule.DAY_NAMES[d]);
+  return session.sources.length > 1 ? `${Schedule.DAY_NAMES[session.day]} (+ ${names.filter(n => n !== Schedule.DAY_NAMES[session.day]).join(', ')})` : Schedule.DAY_NAMES[session.day];
+}
 
 /* ---------- Escalado de dosis por perfil ---------- */
 function scaledDose(dose) {
@@ -68,26 +84,28 @@ function adaptedExercise(x, adj) {
   return { dose, note };
 }
 
-/** Próxima sesión: el siguiente día ACTIVO después del último registrado en la semana actual. */
+/** Próxima sesión: la siguiente sesión ACTIVA después de la última registrada en la semana actual. */
 function nextSessionInfo() {
-  const w = W[state.week], adj = assessment(), act = activeDays();
+  const adj = assessment(), lay = layout();
   const logs = state.logs.filter(l => Number(l.week) === state.week + 1);
-  let di = act[0];
+  let idx = 0;
   if (logs.length) {
     const last = Math.max(...logs.map(l => Number(l.day) || 0));
-    di = act.find(d => d > last) ?? act[act.length - 1];
+    const found = lay.findIndex(s => s.day > last);
+    idx = found === -1 ? lay.length - 1 : found;
   }
-  return { adj, day: w.days[di] || w.days[0], di };
+  const session = lay[idx];
+  const first = W[state.week].days[session.sources[0]];
+  return { adj, session, day: { name: sessionTitle(session), goal: session.sources.map(d => W[state.week].days[d].goal).join(' + ') }, di: session.day, first };
 }
 
 /* ---------- Progreso ---------- */
 function progressWeek(wi) {
   let all = 0, done = 0;
-  const act = activeDays();
-  W[wi].days.forEach((d, di) => {
-    if (!act.includes(di)) return;
-    d.exs.forEach(x => { if (!visibleExercise(x, wi)) return; all++; if (state.done[exId(wi, di, x)]) done++; });
-  });
+  layout().forEach(s => sessionExercises(wi, s).forEach(({ x, id }) => {
+    if (!visibleExercise(x, wi)) return;
+    all++; if (state.done[id]) done++;
+  }));
   return { all, done, p: all ? done / all * 100 : 0 };
 }
 const objectiveState = wi => state.weekObjectives[wi] || {};
@@ -110,14 +128,54 @@ function renderRail() {
   document.querySelectorAll('.weekBtn').forEach(b => b.onclick = () => { state.week = +b.dataset.w; save(); render(); });
 }
 
+
+/* ---------- Guía de ejercicio (pasos, error común, criterio y vídeos) ---------- */
+const YT_ES = q => `https://www.youtube.com/results?search_query=${encodeURIComponent(q)}`;
+
+function videoLinks(x, g, rb) {
+  const q = (g && g.yt) || x.video;
+  let h = `<a class="vid primaryVid" target="_blank" rel="noopener" href="${YT_ES(q)}">▶ Vídeos en español</a>`;
+  if (g && g.ytEn) h += `<a class="vid" target="_blank" rel="noopener" href="${YT_ES(g.ytEn)}">▶ En inglés</a>`;
+  h += rb ? `<a class="vid" target="_blank" rel="noopener" href="${esc(rb.url)}">🎥 Rollerblade · ${esc(rb.name)}</a>` : `<a class="vid" target="_blank" rel="noopener" href="${RB}">🎥 Rollerblade · Advice</a>`;
+  return `<div class="resourceLinks vids">${h}</div>`;
+}
+
+function guideHtml(x, g, rb, a) {
+  const steps = g.steps.map(s => `<li>${esc(s)}</li>`).join('');
+  return `<div class="guide">
+    <div class="gBlock"><b>Paso a paso</b><ol>${steps}</ol></div>
+    <div class="gBlock warn"><b>⚠ Error común</b><p>${esc(g.mistake)}</p></div>
+    <div class="gBlock okBlock"><b>✅ Sabrás que lo dominas cuando…</b><p>${esc(g.ok)}</p></div>
+    ${g.needs ? `<div class="gBlock"><b>🎒 Necesitas</b><p>${esc(g.needs)}</p></div>` : ''}
+    ${x.notes ? `<div class="gBlock"><b>Nota del plan</b><p>${esc(x.notes)}</p></div>` : ''}
+    ${a.note ? `<div class="gBlock coachNote"><b>Coach</b><p>${esc(a.note)}</p></div>` : ''}
+    ${videoLinks(x, g, rb)}
+  </div>`;
+}
+
+/* Respaldo por si algún ejercicio nuevo aún no tiene guía: no se rompe, muestra lo que había. */
+function legacyDetail(x, rb, a) {
+  const note = x.notes || 'Criterio: termina las repeticiones manteniendo postura, control y respiración. Si la técnica se degrada, reduce velocidad o volumen.';
+  return `${videoLinks(x, null, rb)}${esc(note)}${a.note ? `<br><b>Coach:</b> ${esc(a.note)}` : ''}`;
+}
+
+
+/** Opciones del selector de días. El modo antiguo (5 días sin viernes) solo se ofrece a quien ya lo tenía. */
+function dayOptions() {
+  const cur = Schedule.modeKey(state.restDays);
+  const list = [6, 5, 4, 3];
+  if (cur === 'legacy5') list.push('legacy5');
+  return list.map(k => `<option value="${k}" ${String(k) === String(cur) ? 'selected' : ''}>${esc(Schedule.MODES[k].label)}</option>`).join('');
+}
+
 /* ---------- Render: plan ---------- */
 function renderPlan() {
   const w = W[state.week], p = progressWeek(state.week), rec = nextSessionInfo(), adj = rec.adj;
-  const op = objectiveProgress(state.week), obj = objectiveState(state.week), act = activeDays();
+  const op = objectiveProgress(state.week), obj = objectiveState(state.week);
   const isDeload = /descarga/i.test(w.phase);
   let html = '';
 
-  html += `<div class="configBar"><label><span class="eyebrow">NIVEL</span><select id="profileSelect" aria-label="Nivel de entrada">${Object.entries(PROFILES).map(([k, v]) => `<option value="${k}" ${k === state.profile ? 'selected' : ''}>${esc(v.label)}</option>`).join('')}</select></label><label><span class="eyebrow">DÍAS / SEMANA</span><select id="restSelect" aria-label="Sesiones por semana"><option value="0" ${state.restDays === 0 ? 'selected' : ''}>6 días</option><option value="1" ${state.restDays === 1 ? 'selected' : ''}>5 días (sin vie)</option><option value="2" ${state.restDays === 2 ? 'selected' : ''}>4 días (L·X·J·S)</option></select></label><small>${esc(profile().desc)}. Los días no activos son descanso.</small></div>`;
+  html += `<div class="configBar"><label><span class="eyebrow">NIVEL</span><select id="profileSelect" aria-label="Nivel de entrada">${Object.entries(PROFILES).map(([k, v]) => `<option value="${k}" ${k === state.profile ? 'selected' : ''}>${esc(v.label)}</option>`).join('')}</select></label><label><span class="eyebrow">DÍAS / SEMANA</span><select id="restSelect" aria-label="Días de entrenamiento por semana">${dayOptions()}</select></label><small>${esc(profile().desc)}. Los días no activos son descanso.</small></div>`;
 
   html += `<div class="coach next ${adj.level}" role="status"><div class="coachDot"></div><div><span class="eyebrow">PRÓXIMA SESIÓN RECOMENDADA</span><h3>${esc(adj.title)}</h3><p>${esc(adj.text)}</p><div class="nextSession"><b>${esc(rec.day.name)}</b> · ${esc(rec.day.goal)} · ${adj.empty || adj.level === 'neutral' ? 'sin ajuste' : `carga ${Math.round(adj.factor * 100)}%`}</div><div class="adaptedNote">El <b>plan base no cambia</b>. Esta tarjeta solo modifica visualmente la próxima sesión a partir de tus últimos registros.</div></div></div>`;
 
@@ -129,31 +187,44 @@ function renderPlan() {
 
   html += `<div class="environmentBanner"><b>🌎 Entorno de esta semana</b><span>${esc(w.environment)}</span></div>`;
 
-  html += W[state.week].days.map((d, di) => {
-    const isRest = !act.includes(di);
-    const visible = d.exs.filter(x => visibleExercise(x, state.week));
-    const dd = visible.filter(x => state.done[exId(state.week, di, x)]).length;
-    const isNext = !isRest && di === rec.di;
-    const title = `${DAYS[di]} · ${esc(d.name)}${isNext ? ' · ⭐ siguiente' : ''}`;
-    if (isRest) {
-      return `<article class="day restDay"><div class="dayHead restHead"><div><div class="dayTitle">${DAYS[di]} · Descanso</div><div class="dayMeta">Día libre según tu configuración (${esc(d.name)} omitido)</div></div></div></article>`;
-    }
-    const body = visible.map(x => {
-      const k = exId(state.week, di, x), c = !!state.done[k];
+  /* Días activos. Si el modo fusiona días (p. ej. Lun–Vie), el contenido del día omitido aparece en otra sesión. */
+  html += layout().map(session => {
+    const items = sessionExercises(state.week, session).filter(({ x }) => visibleExercise(x, state.week));
+    const dd = items.filter(({ id }) => state.done[id]).length;
+    const isNext = session.day === rec.di;
+    const title = `${esc(sessionTitle(session))}${isNext ? ' · ⭐ siguiente' : ''}`;
+    const goal = session.sources.map(d => W[state.week].days[d].goal).join(' + ');
+    const merged = session.sources.length > 1;
+    const body = items.map(({ x, di, id }) => {
+      const k = id, c = !!state.done[k];
       const a = isNext ? adaptedExercise(x, adj) : { dose: scaledDose(x.dose), note: '' };
       if (!a) return `<div class="exercise skipped"><div></div><div><h4>${esc(x.name)}</h4><p>⛔ Retirado temporalmente por el Coach debido a la carga/fatiga registrada.</p></div></div>`;
-      const note = x.notes || 'Criterio: termina las repeticiones manteniendo postura, control y respiración. Si la técnica se degrada, reduce velocidad o volumen.';
-      const rb = rbFor(x);
+      const g = GUIDE[x.name];
       const cid = 'cb_' + k.replace(/[^a-z0-9]/gi, '_');
-      return `<div class="exercise ${c ? 'completed ' : ''}${isNext ? 'nextExercise ' : ''}" data-ex="${esc(k)}"><input type="checkbox" id="${cid}" aria-label="Completado: ${esc(x.name)}" ${c ? 'checked' : ''}><div><h4>${esc(x.name)}${isNext ? ' <span class="adaptedBadge">SESIÓN RECOMENDADA</span>' : ''}</h4><p>${esc(x.desc)}</p><div class="resourceLinks"><button class="detail" type="button" aria-expanded="false">ℹ️ Ver criterio y vídeos</button></div><div class="exerciseNotes"><div class="resourceLinks vids"><a target="_blank" rel="noopener" href="${YT(x.video)}">▶ YouTube</a>${rb ? `<a target="_blank" rel="noopener" href="${rb.url}">🎥 Rollerblade · ${esc(rb.name)}</a>` : `<a target="_blank" rel="noopener" href="${RB}">🎥 Rollerblade · Advice</a>`}</div>${esc(note)}${a.note ? `<br><b>Coach:</b> ${esc(a.note)}` : ''}</div></div><div class="dose">${esc(a.dose)}</div></div>`;
+      const rb = rbFor(x);
+      const summary = g ? g.what : x.desc;                         // siempre visible: qué es, en una frase
+      const detail = g ? guideHtml(x, g, rb, a) : legacyDetail(x, rb, a);
+      const mergedTag = merged && di !== session.day ? ` <span class="fromDay">de ${esc(Schedule.DAY_NAMES[di])}</span>` : '';
+      return `<div class="exercise ${c ? 'completed ' : ''}${isNext ? 'nextExercise ' : ''}" data-ex="${esc(k)}"><input type="checkbox" id="${cid}" aria-label="Completado: ${esc(x.name)}" ${c ? 'checked' : ''}><div><h4>${esc(x.name)}${mergedTag}</h4><p class="exWhat">${esc(summary)}</p><div class="resourceLinks"><button class="detail" type="button" aria-expanded="false">📖 Cómo se hace, errores y vídeos</button></div><div class="exerciseNotes">${detail}</div></div><div class="dose">${esc(a.dose)}</div></div>`;
     }).join('');
     /* <details>/<summary>: teclado y lector de pantalla sin código extra */
-    return `<details class="day ${isNext ? 'recommendedDay' : ''}" ${isNext ? 'open' : ''}><summary class="dayHead"><div><div class="dayTitle">${title}</div><div class="dayMeta">${esc(d.goal)}</div></div><div class="dayProgress">${dd}/${visible.length}</div></summary><div class="dayBody">${body}</div></details>`;
+    return `<details class="day ${isNext ? 'recommendedDay' : ''}" ${isNext ? 'open' : ''}><summary class="dayHead"><div><div class="dayTitle">${title}</div><div class="dayMeta">${esc(goal)}</div></div><div class="dayProgress">${dd}/${items.length}</div></summary><div class="dayBody">${body}</div></details>`;
   }).join('');
+
+  /* Días sin sesión = descanso. La nota dice exactamente adónde se movió el contenido de cada día libre. */
+  const lay = layout();
+  const activeSet = new Set(lay.map(s => s.day));
+  const freed = Schedule.DAY_NAMES.map((n, i) => ({ n, i })).filter(d => !activeSet.has(d.i));
+  if (freed.length) {
+    const dest = d => { const s = lay.find(x => x.sources.includes(d.i)); return s ? Schedule.DAY_NAMES[s.day] : null; };
+    const moves = freed.map(d => `${d.n} → ${dest(d)}`);
+    const list = freed.length === 1 ? freed[0].n : freed.slice(0, -1).map(d => d.n).join(', ') + ' y ' + freed[freed.length - 1].n;
+    html += `<div class="restNote" role="note">😴 <b>Descanso:</b> ${esc(list)}. Su contenido se traslada a otra sesión (${esc(moves.join(' · '))}). Cada ejercicio trasladado lleva una etiqueta morada con su día de origen.</div>`;
+  }
 
   $('weekContent').innerHTML = html;
   $('profileSelect').onchange = e => { state.profile = e.target.value; save(); render(); };
-  $('restSelect').onchange = e => { state.restDays = +e.target.value; save(); render(); };
+  $('restSelect').onchange = e => { const v = e.target.value; state.restDays = v === 'legacy5' ? 1 : Number(v); save(); render(); };
   document.querySelectorAll('[data-obj]').forEach(x => x.onchange = () => toggleObjective(state.week, +x.dataset.obj));
   document.querySelectorAll('.exercise input[type=checkbox]').forEach(inp => inp.onchange = () => {
     const k = inp.closest('.exercise').dataset.ex; state.done[k] = inp.checked; save(); render();
@@ -356,7 +427,6 @@ $('importFile').onchange = () => {
     const res = Store.parseImport(r.result);
     if (!res.ok) { toast(res.reason); return; }
     if (state.logs.length && !confirm('Esto reemplazará tu progreso actual. ¿Continuar?')) return;
-    const keep = state.restDays;
     Object.keys(state).forEach(k => delete state[k]); Object.assign(state, res.state);
     save(); render(); toast('Progreso importado ✓');
   };

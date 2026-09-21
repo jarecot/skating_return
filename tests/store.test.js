@@ -20,7 +20,7 @@ t('JSON válido pero tipo erróneo (array)', () => assert.doesNotThrow(() => S.l
 t('null literal',                      () => assert.doesNotThrow(() => S.load(fake('null'))));
 
 console.log('\nmigrate — datos v6 se conservan');
-t('estado v6 sin version se migra',    () => { const v6 = { week:3, done:{'0-0-1':true}, logs:[{date:'2026-01-01',week:1,day:0,min:30,rpe:5,fatigue:2,pain:0,control:4,technique:4,notes:'ok'}], skills:{}, profile:'none', weekObjectives:{} }; const s = S.migrate(v6); assert.strictEqual(s.version, 7); assert.strictEqual(s.week, 3); assert.strictEqual(s.profile, 'none'); assert.strictEqual(s.logs.length, 1); assert.strictEqual(s.done['0-0-1'], undefined, 'la clave v6 no debe sobrevivir'); assert.strictEqual(Object.keys(s.done).length, 1); });
+t('estado v6 sin version se migra',    () => { const v6 = { week:3, done:{'0-0-1':true}, logs:[{date:'2026-01-01',week:1,day:0,min:30,rpe:5,fatigue:2,pain:0,control:4,technique:4,notes:'ok'}], skills:{}, profile:'none', weekObjectives:{} }; const s = S.migrate(v6); assert.strictEqual(s.version, 7); assert.strictEqual(s.week, 3); assert.strictEqual(s.profile, 'beginner'); /* 'none' se unificó con Principiante en v7.1 */ assert.strictEqual(s.logs.length, 1); assert.strictEqual(s.done['0-0-1'], undefined, 'la clave v6 no debe sobrevivir'); assert.strictEqual(Object.keys(s.done).length, 1); });
 t('semana fuera de rango se descarta', () => assert.strictEqual(S.migrate({week:99}).week, 0));
 t('logs con basura se filtran',        () => assert.strictEqual(S.migrate({logs:[null, 5, 'x', {min:10}]}).logs.length, 1));
 t('valores se acotan (rpe 99 -> 10)',  () => assert.strictEqual(S.migrate({logs:[{rpe:99}]}).logs[0].rpe, 10));
@@ -57,8 +57,33 @@ t('migrar dos veces es idempotente', () => { const a = S.migrate({ done: { '0-0-
 
 console.log('\nload — señal migrated');
 t('datos v6 (sin version) -> migrated:true',  () => assert.strictEqual(S.load(fake(JSON.stringify({done:{},logs:[]}))).migrated, true));
-t('datos ya v7 -> migrated:false',            () => assert.strictEqual(S.load(fake(JSON.stringify({version:7,done:{},logs:[]}))).migrated, false));
+t('datos v7 COMPLETOS -> migrated:false',      () => assert.strictEqual(S.load(fake(JSON.stringify(S.defaults()))).migrated, false));
+t('datos v7 INCOMPLETOS -> migrated:true (se completan y persisten)', () => assert.strictEqual(S.load(fake(JSON.stringify({version:7,done:{},logs:[]}))).migrated, true));
 t('sin datos -> migrated no true',            () => assert.notStrictEqual(S.load(fake()).migrated, true));
+
+
+console.log('\nperfiles: Ninguna se unifica en Principiante');
+t('un usuario con profile "none" guardado pasa a "beginner"', () => assert.strictEqual(S.migrate({ profile: 'none' }).profile, 'beginner'));
+t('"beginner" se conserva', () => assert.strictEqual(S.migrate({ profile: 'beginner' }).profile, 'beginner'));
+t('"past" e "intermediate" no se tocan', () => { assert.strictEqual(S.migrate({ profile: 'past' }).profile, 'past'); assert.strictEqual(S.migrate({ profile: 'intermediate' }).profile, 'intermediate'); });
+t('perfil desconocido cae al valor por defecto, no rompe', () => assert.strictEqual(S.migrate({ profile: 'inventado' }).profile, 'past'));
+t('un import con profile "none" también se unifica', () => assert.strictEqual(S.parseImport(JSON.stringify({ done: {}, logs: [], profile: 'none' })).state.profile, 'beginner'));
+
+
+console.log('\nrestDays: los modos de calendario sobreviven a guardar y recargar');
+[6, 5, 4, 3].forEach(k => t('modo ' + k + ' días se conserva tras migrate', () => assert.strictEqual(S.migrate({ restDays: k }).restDays, k)));
+t('código antiguo 0 (6 días) se conserva', () => assert.strictEqual(S.migrate({ restDays: 0 }).restDays, 0));
+t('código antiguo 1 (5 sin viernes) se conserva, NO se convierte en Lun–Vie', () => assert.strictEqual(S.migrate({ restDays: 1 }).restDays, 1));
+t('código antiguo 2 (4 días) se conserva', () => assert.strictEqual(S.migrate({ restDays: 2 }).restDays, 2));
+t('valor inválido (99, "x", null) cae a 0 sin romper', () => [99, 'x', null, -1].forEach(v => assert.strictEqual(S.migrate({ restDays: v }).restDays, 0)));
+t('ida y vuelta: guardar y cargar conserva Lun–Vie', () => { const st = fake(JSON.stringify({ version: 7, restDays: 5, done: {}, logs: [] })); assert.strictEqual(S.load(st).state.restDays, 5); });
+
+
+console.log('\nload — migrated detecta CAMBIOS reales, no solo el número de versión');
+t('v7.0 con profile "none" -> migrated:true (aunque version ya sea 7)', () => { const r = S.load(fake(JSON.stringify({ version: 7, profile: 'none', done: {}, logs: [] }))); assert.strictEqual(r.migrated, true); assert.strictEqual(r.state.profile, 'beginner'); });
+t('datos v7 ya limpios -> migrated:false (no reescribe sin necesidad)', () => { const clean = S.migrate({ version: 7, profile: 'past', done: {}, logs: [] }); assert.strictEqual(S.load(fake(JSON.stringify(clean))).migrated, false); });
+t('restDays inválido en disco se corrige y marca migrated', () => assert.strictEqual(S.load(fake(JSON.stringify({ version: 7, restDays: 99, done: {}, logs: [] }))).migrated, true));
+t('log con valores fuera de rango se acota y marca migrated', () => assert.strictEqual(S.load(fake(JSON.stringify({ version: 7, done: {}, logs: [{ rpe: 99 }] }))).migrated, true));
 
 console.log(`\n${passed} pasan · ${failed} fallan\n`);
 process.exit(failed ? 1 : 0);
