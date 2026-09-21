@@ -1,0 +1,19 @@
+{
+  "name": "Return to Skating — 13 semanas",
+  "short_name": "Skating",
+  "description": "Programa progresivo de 13 semanas para volver al patinaje inline, con registro, Coach adaptativo y seguimiento de habilidades.",
+  "lang": "es",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fffaf5",
+  "theme_color": "#2C2153",
+  "categories": ["sports", "health", "fitness"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" },
+    { "src": "favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
